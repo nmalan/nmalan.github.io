@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neil Malan</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            background-color: #f8f9fa;
+        }
+
+        header {
+            background: linear-gradient(135deg, #0c4a6e 0%, #0e7490 100%);
+            color: white;
+            padding: 3rem 0 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-inner {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .header-photo {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 3px solid rgba(255,255,255,0.5);
+            object-fit: cover;
+            flex-shrink: 0;
+            background: rgba(255,255,255,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.6);
+            text-align: center;
+        }
+
+        .header-text h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .header-text .title {
+            font-size: 1.05rem;
+            opacity: 0.9;
+            font-weight: 400;
+            margin-bottom: 0.2rem;
+        }
+
+        .header-text .affiliations {
+            font-size: 0.9rem;
+            opacity: 0.75;
+            font-weight: 300;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        nav {
+            background: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        nav li {
+            margin: 0;
+        }
+
+        nav a {
+            display: block;
+            padding: 1rem 1.4rem;
+            color: #0c4a6e;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        nav a:hover {
+            background: #e0f2fe;
+            color: #0e7490;
+        }
+
+        nav a.external::after {
+            content: ' ↗';
+            font-size: 0.8em;
+            opacity: 0.6;
+        }
+
+        main {
+            padding: 3rem 0;
+        }
+
+        section {
+            background: white;
+            margin-bottom: 2rem;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            color: #0c4a6e;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 3px solid #0e7490;
+            font-size: 1.8rem;
+        }
+
+        h3 {
+            color: #0c4a6e;
+            font-size: 1.1rem;
+            margin-bottom: 0.4rem;
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 280px;
+            gap: 2.5rem;
+            align-items: start;
+        }
+
+        .about-text {
+            color: #475569;
+            line-height: 1.8;
+        }
+
+        .about-text p {
+            margin-bottom: 1rem;
+        }
+
+        .affiliation-list {
+            list-style: none;
+        }
+
+        .affiliation-list li {
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.75rem;
+            background: #f0f9ff;
+            border-left: 3px solid #0e7490;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            color: #334155;
+        }
+
+        .affiliation-list li a {
+            color: #0e7490;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .affiliation-list li a:hover {
+            text-decoration: underline;
+        }
+
+        .affiliation-list .role {
+            display: block;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 0.1rem;
+        }
+
+        .research-interests {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .tag {
+            background: #e0f2fe;
+            color: #0c4a6e;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .research-text {
+            color: #475569;
+            line-height: 1.8;
+        }
+
+        .research-text p {
+            margin-bottom: 1rem;
+        }
+
+        .publication {
+            padding: 1.25rem;
+            margin-bottom: 1.25rem;
+            border-left: 3px solid #cbd5e1;
+            background: #f8fafc;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .publication:hover {
+            border-left-color: #0e7490;
+        }
+
+        .pub-title {
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 0.3rem;
+        }
+
+        .pub-authors {
+            color: #64748b;
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .pub-authors strong {
+            color: #0c4a6e;
+        }
+
+        .pub-journal {
+            color: #64748b;
+            font-size: 0.9rem;
+            font-style: italic;
+        }
+
+        .pub-link {
+            display: inline-block;
+            margin-top: 0.4rem;
+            font-size: 0.85rem;
+            color: #0e7490;
+            text-decoration: none;
+        }
+
+        .pub-link:hover {
+            text-decoration: underline;
+        }
+
+        .scholar-link {
+            display: inline-block;
+            margin-top: 0.5rem;
+            padding: 0.5rem 1.2rem;
+            background: #0e7490;
+            color: white;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+
+        .scholar-link:hover {
+            background: #0c4a6e;
+        }
+
+        .student {
+            padding: 1.5rem;
+            margin-bottom: 1.25rem;
+            background: #f8fafc;
+            border-left: 4px solid #0e7490;
+            border-radius: 4px;
+        }
+
+        .student-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 0.25rem;
+        }
+
+        .student-degree {
+            color: #0e7490;
+            font-weight: 500;
+            font-size: 0.9rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .student-topic {
+            color: #475569;
+            font-size: 0.95rem;
+        }
+
+        .student-status {
+            display: inline-block;
+            margin-top: 0.5rem;
+            padding: 0.15rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-current {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-past {
+            background: #f1f5f9;
+            color: #475569;
+        }
+
+        .seminar-callout {
+            background: linear-gradient(135deg, #0c4a6e 0%, #0e7490 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .seminar-callout h3 {
+            color: white;
+            font-size: 1.4rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .seminar-callout p {
+            opacity: 0.9;
+            margin-bottom: 1.25rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .seminar-btn {
+            display: inline-block;
+            padding: 0.7rem 2rem;
+            background: white;
+            color: #0c4a6e;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1rem;
+            transition: opacity 0.3s;
+        }
+
+        .seminar-btn:hover {
+            opacity: 0.9;
+        }
+
+        .cv-section {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .cv-section p {
+            color: #475569;
+            flex: 1;
+        }
+
+        .cv-btn {
+            display: inline-block;
+            padding: 0.7rem 2rem;
+            background: #0e7490;
+            color: white;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background 0.3s;
+            white-space: nowrap;
+        }
+
+        .cv-btn:hover {
+            background: #0c4a6e;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .contact-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .contact-label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #94a3b8;
+        }
+
+        .contact-value {
+            color: #1e293b;
+            font-size: 1rem;
+        }
+
+        .contact-value a {
+            color: #0e7490;
+            text-decoration: none;
+        }
+
+        .contact-value a:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            background: #1e293b;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 768px) {
+            .header-text h1 {
+                font-size: 1.8rem;
+            }
+
+            .about-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+
+            nav a {
+                padding: 0.75rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            section {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-inner">
+                <div class="header-photo">
+                    <!-- Replace with: <img src="photo.jpg" alt="Neil Malan" style="width:120px;height:120px;border-radius:50%;object-fit:cover;border:3px solid rgba(255,255,255,0.5);"> -->
+                    Photo
+                </div>
+                <div class="header-text">
+                    <h1>Neil Malan</h1>
+                    <p class="title">Senior Research Associate</p>
+                    <p class="affiliations">Climate Change Research Centre &amp; Centre for Marine Science and Innovation, UNSW Sydney &nbsp;·&nbsp; ACEAS</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="#about">About</a></li>
+            <li><a href="#research">Research</a></li>
+            <li><a href="#publications">Publications</a></li>
+            <li><a href="#students">Students</a></li>
+            <li><a href="https://nmalan.github.io/oceania-mhw-seminar" class="external">Seminars</a></li>
+            <li><a href="#cv">CV</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <main class="container">
+
+        <section id="about">
+            <h2>About</h2>
+            <div class="about-grid">
+                <div class="about-text">
+                    <p><!-- Bio paragraph to be added --></p>
+                </div>
+                <div>
+                    <ul class="affiliation-list">
+                        <li>
+                            <span class="role">Senior Research Associate</span>
+                            <a href="https://www.ccrc.unsw.edu.au" target="_blank">Climate Change Research Centre</a>, UNSW Sydney
+                        </li>
+                        <li>
+                            <span class="role">Affiliate</span>
+                            <a href="https://www.cmsi.unsw.edu.au" target="_blank">Centre for Marine Science and Innovation</a>, UNSW Sydney
+                        </li>
+                        <li>
+                            <span class="role">Affiliate</span>
+                            <a href="https://aceas.org.au" target="_blank">ARC Australian Centre for Excellence in Antarctic Science (ACEAS)</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="research">
+            <h2>Research</h2>
+            <div class="research-interests">
+                <span class="tag">Marine heatwaves</span>
+                <span class="tag">Subsurface ocean</span>
+                <span class="tag">Western boundary currents</span>
+                <span class="tag">Ocean–climate interactions</span>
+                <span class="tag">Southern Ocean</span>
+            </div>
+            <div class="research-text">
+                <p><!-- Research description to be added --></p>
+            </div>
+        </section>
+
+        <section id="publications">
+            <h2>Publications</h2>
+            <!-- Add selected key publications here, then link to full list -->
+            <div class="publication">
+                <div class="pub-title"><!-- Title --></div>
+                <div class="pub-authors"><!-- Authors --></div>
+                <div class="pub-journal"><!-- Journal, year --></div>
+            </div>
+            <p style="margin-top:1rem;">
+                <a href="#" class="scholar-link">Full list on Google Scholar</a>
+            </p>
+        </section>
+
+        <section id="students">
+            <h2>Students &amp; Team</h2>
+
+            <h3 style="margin-bottom:1rem; color:#64748b; font-weight:500; font-size:1rem; text-transform:uppercase; letter-spacing:0.05em;">Current</h3>
+
+            <div class="student">
+                <div class="student-name"><!-- Student name --></div>
+                <div class="student-degree"><!-- PhD / Honours / Masters --></div>
+                <div class="student-topic"><!-- Thesis topic --></div>
+                <span class="student-status status-current">Current</span>
+            </div>
+
+            <h3 style="margin:1.5rem 0 1rem; color:#64748b; font-weight:500; font-size:1rem; text-transform:uppercase; letter-spacing:0.05em;">Past</h3>
+
+            <div class="student">
+                <div class="student-name"><!-- Student name --></div>
+                <div class="student-degree"><!-- Degree --></div>
+                <div class="student-topic"><!-- Thesis topic --></div>
+                <span class="student-status status-past">Graduated</span>
+            </div>
+
+        </section>
+
+        <section id="cv">
+            <h2>CV</h2>
+            <div class="cv-section">
+                <p>Download my full curriculum vitae, including my complete publication list, teaching history, and research funding.</p>
+                <a href="cv.pdf" class="cv-btn">Download CV (PDF)</a>
+            </div>
+        </section>
+
+        <section id="contact">
+            <h2>Contact</h2>
+            <div class="contact-grid">
+                <div class="contact-item">
+                    <span class="contact-label">Email</span>
+                    <span class="contact-value"><a href="mailto:n.malan@unsw.edu.au">n.malan@unsw.edu.au</a></span>
+                </div>
+                <div class="contact-item">
+                    <span class="contact-label">Office</span>
+                    <span class="contact-value"><!-- Room number, building --><br>UNSW Sydney, NSW 2052</span>
+                </div>
+                <div class="contact-item">
+                    <span class="contact-label">Google Scholar</span>
+                    <span class="contact-value"><a href="#" target="_blank"><!-- Scholar profile link --></a></span>
+                </div>
+                <div class="contact-item">
+                    <span class="contact-label">ORCID</span>
+                    <span class="contact-value"><a href="#" target="_blank"><!-- ORCID --></a></span>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>Neil Malan &nbsp;·&nbsp; Climate Change Research Centre, UNSW Sydney</p>
+        </div>
+    </footer>
+
+</body>
+</html>
