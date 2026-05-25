@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neil Malan</title>
+    <title>Neil Malan — Physical Oceanographer</title>
     <style>
         * {
             margin: 0;
@@ -31,20 +31,13 @@
             gap: 2rem;
         }
 
-        .header-photo {
+        .header-inner img {
             width: 120px;
             height: 120px;
             border-radius: 50%;
             border: 3px solid rgba(255,255,255,0.5);
             object-fit: cover;
             flex-shrink: 0;
-            background: rgba(255,255,255,0.15);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.8rem;
-            color: rgba(255,255,255,0.6);
-            text-align: center;
         }
 
         .header-text h1 {
@@ -87,13 +80,9 @@
             flex-wrap: wrap;
         }
 
-        nav li {
-            margin: 0;
-        }
-
         nav a {
             display: block;
-            padding: 1rem 1.4rem;
+            padding: 1rem 1.2rem;
             color: #0c4a6e;
             text-decoration: none;
             font-weight: 500;
@@ -131,11 +120,7 @@
             font-size: 1.8rem;
         }
 
-        h3 {
-            color: #0c4a6e;
-            font-size: 1.1rem;
-            margin-bottom: 0.4rem;
-        }
+        /* About */
 
         .about-grid {
             display: grid;
@@ -184,37 +169,100 @@
             margin-bottom: 0.1rem;
         }
 
-        .research-interests {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-bottom: 1.5rem;
+        .awards-block {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #e2e8f0;
         }
 
-        .tag {
-            background: #e0f2fe;
+        .awards-block h3 {
             color: #0c4a6e;
-            padding: 0.3rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            font-weight: 500;
-        }
-
-        .research-text {
-            color: #475569;
-            line-height: 1.8;
-        }
-
-        .research-text p {
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 700;
             margin-bottom: 1rem;
         }
 
-        .publication {
+        .award-item {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 0.6rem;
+            font-size: 0.9rem;
+            color: #475569;
+        }
+
+        .award-year {
+            font-weight: 700;
+            color: #0e7490;
+            flex-shrink: 0;
+            width: 2.5rem;
+        }
+
+        /* Research */
+
+        .research-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.25rem;
+        }
+
+        .research-theme {
             padding: 1.25rem;
-            margin-bottom: 1.25rem;
+            background: #f8fafc;
+            border-left: 4px solid #0e7490;
+            border-radius: 4px;
+        }
+
+        .research-theme h3 {
+            color: #0c4a6e;
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .research-theme p {
+            color: #475569;
+            font-size: 0.9rem;
+            line-height: 1.7;
+        }
+
+        /* Publications */
+
+        .pub-stats {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 1.75rem;
+            padding: 1rem 1.5rem;
+            background: #f0f9ff;
+            border-radius: 6px;
+            flex-wrap: wrap;
+        }
+
+        .pub-stat {
+            text-align: center;
+        }
+
+        .pub-stat .number {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #0c4a6e;
+            display: block;
+        }
+
+        .pub-stat .label {
+            font-size: 0.8rem;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .publication {
+            padding: 1.1rem 1.25rem;
+            margin-bottom: 1rem;
             border-left: 3px solid #cbd5e1;
             background: #f8fafc;
             border-radius: 0 4px 4px 0;
+            transition: border-left-color 0.2s;
         }
 
         .publication:hover {
@@ -225,11 +273,12 @@
             font-weight: 600;
             color: #1e293b;
             margin-bottom: 0.3rem;
+            font-size: 0.95rem;
         }
 
         .pub-authors {
             color: #64748b;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             margin-bottom: 0.25rem;
         }
 
@@ -239,25 +288,44 @@
 
         .pub-journal {
             color: #64748b;
-            font-size: 0.9rem;
-            font-style: italic;
+            font-size: 0.85rem;
         }
 
         .pub-link {
-            display: inline-block;
-            margin-top: 0.4rem;
-            font-size: 0.85rem;
             color: #0e7490;
             text-decoration: none;
+            font-weight: 500;
         }
 
         .pub-link:hover {
             text-decoration: underline;
         }
 
+        .pub-badge {
+            display: inline-block;
+            padding: 0.1rem 0.5rem;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            vertical-align: middle;
+            margin-left: 0.4rem;
+        }
+
+        .badge-inpress {
+            background: #fef9c3;
+            color: #854d0e;
+        }
+
+        .badge-other {
+            background: #f1f5f9;
+            color: #64748b;
+        }
+
         .scholar-link {
             display: inline-block;
-            margin-top: 0.5rem;
+            margin-top: 1.25rem;
             padding: 0.5rem 1.2rem;
             background: #0e7490;
             color: white;
@@ -272,39 +340,41 @@
             background: #0c4a6e;
         }
 
+        /* Students */
+
         .student {
-            padding: 1.5rem;
-            margin-bottom: 1.25rem;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
             background: #f8fafc;
             border-left: 4px solid #0e7490;
             border-radius: 4px;
         }
 
         .student-name {
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: 600;
             color: #1e293b;
-            margin-bottom: 0.25rem;
+            margin-bottom: 0.2rem;
         }
 
         .student-degree {
             color: #0e7490;
             font-weight: 500;
             font-size: 0.9rem;
-            margin-bottom: 0.25rem;
+            margin-bottom: 0.2rem;
         }
 
         .student-topic {
             color: #475569;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
         }
 
         .student-status {
             display: inline-block;
-            margin-top: 0.5rem;
+            margin-top: 0.4rem;
             padding: 0.15rem 0.6rem;
             border-radius: 12px;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: 600;
         }
 
@@ -318,43 +388,57 @@
             color: #475569;
         }
 
-        .seminar-callout {
-            background: linear-gradient(135deg, #0c4a6e 0%, #0e7490 100%);
-            color: white;
-            padding: 2rem;
-            border-radius: 8px;
-            text-align: center;
-        }
-
-        .seminar-callout h3 {
-            color: white;
-            font-size: 1.4rem;
-            margin-bottom: 0.75rem;
-        }
-
-        .seminar-callout p {
-            opacity: 0.9;
-            margin-bottom: 1.25rem;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .seminar-btn {
-            display: inline-block;
-            padding: 0.7rem 2rem;
-            background: white;
-            color: #0c4a6e;
-            border-radius: 4px;
-            text-decoration: none;
+        .students-subhead {
+            margin: 1.5rem 0 0.75rem;
+            color: #64748b;
             font-weight: 700;
-            font-size: 1rem;
-            transition: opacity 0.3s;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
         }
 
-        .seminar-btn:hover {
-            opacity: 0.9;
+        .students-subhead:first-of-type {
+            margin-top: 0;
         }
+
+        /* Teaching */
+
+        .teaching-item {
+            padding: 1.1rem 1.25rem;
+            margin-bottom: 1rem;
+            background: #f8fafc;
+            border-left: 3px solid #cbd5e1;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .teaching-role {
+            font-weight: 700;
+            color: #0c4a6e;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.2rem;
+        }
+
+        .teaching-course {
+            font-weight: 600;
+            color: #1e293b;
+            font-size: 0.95rem;
+            margin-bottom: 0.1rem;
+        }
+
+        .teaching-institution {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        .teaching-desc {
+            color: #475569;
+            font-size: 0.875rem;
+            margin-top: 0.3rem;
+        }
+
+        /* CV */
 
         .cv-section {
             display: flex;
@@ -384,29 +468,26 @@
             background: #0c4a6e;
         }
 
+        /* Contact */
+
         .contact-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 2rem;
+            gap: 1.5rem;
         }
 
         .contact-item {
             display: flex;
             flex-direction: column;
-            gap: 0.25rem;
+            gap: 0.2rem;
         }
 
         .contact-label {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.06em;
             color: #94a3b8;
-        }
-
-        .contact-value {
-            color: #1e293b;
-            font-size: 1rem;
         }
 
         .contact-value a {
@@ -420,181 +501,448 @@
 
         footer {
             background: #1e293b;
-            color: white;
+            color: rgba(255,255,255,0.7);
             text-align: center;
             padding: 2rem 0;
             margin-top: 1rem;
             font-size: 0.9rem;
-            opacity: 0.9;
         }
 
         @media (max-width: 768px) {
-            .header-text h1 {
-                font-size: 1.8rem;
-            }
-
-            .about-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .contact-grid {
-                grid-template-columns: 1fr;
-            }
-
-            nav a {
-                padding: 0.75rem 1rem;
-                font-size: 0.9rem;
-            }
-
-            section {
-                padding: 1.5rem;
-            }
+            .header-text h1 { font-size: 1.8rem; }
+            .about-grid { grid-template-columns: 1fr; }
+            .research-grid { grid-template-columns: 1fr; }
+            .contact-grid { grid-template-columns: 1fr; }
+            nav a { padding: 0.75rem 0.9rem; font-size: 0.9rem; }
+            section { padding: 1.5rem; }
         }
     </style>
 </head>
 <body>
-    <header>
-        <div class="container">
-            <div class="header-inner">
-                <div class="header-photo">
-                    <!-- Replace with: <img src="photo.jpg" alt="Neil Malan" style="width:120px;height:120px;border-radius:50%;object-fit:cover;border:3px solid rgba(255,255,255,0.5);"> -->
-                    Photo
-                </div>
-                <div class="header-text">
-                    <h1>Neil Malan</h1>
-                    <p class="title">Senior Research Associate</p>
-                    <p class="affiliations">Climate Change Research Centre &amp; Centre for Marine Science and Innovation, UNSW Sydney &nbsp;·&nbsp; ACEAS</p>
-                </div>
+
+<header>
+    <div class="container">
+        <div class="header-inner">
+            <img src="headshot.jpeg" alt="Neil Malan">
+            <div class="header-text">
+                <h1>Neil Malan</h1>
+                <p class="title">Senior Research Associate · Physical Oceanographer</p>
+                <p class="affiliations">Climate Change Research Centre &amp; Centre for Marine Science and Innovation, UNSW Sydney &nbsp;·&nbsp; ACEAS</p>
             </div>
         </div>
-    </header>
+    </div>
+</header>
 
-    <nav>
-        <ul>
-            <li><a href="#about">About</a></li>
-            <li><a href="#research">Research</a></li>
-            <li><a href="#publications">Publications</a></li>
-            <li><a href="#students">Students</a></li>
-            <li><a href="https://nmalan.github.io/oceania-mhw-seminar" class="external">Seminars</a></li>
-            <li><a href="#cv">CV</a></li>
-            <li><a href="#contact">Contact</a></li>
-        </ul>
-    </nav>
+<nav>
+    <ul>
+        <li><a href="#about">About</a></li>
+        <li><a href="#research">Research</a></li>
+        <li><a href="#publications">Publications</a></li>
+        <li><a href="#students">Students</a></li>
+        <li><a href="#teaching">Teaching</a></li>
+        <li><a href="https://nmalan.github.io/oceania-mhw-seminar" class="external">Seminars</a></li>
+        <li><a href="#cv">CV</a></li>
+        <li><a href="#contact">Contact</a></li>
+    </ul>
+</nav>
 
-    <main class="container">
+<main class="container">
 
-        <section id="about">
-            <h2>About</h2>
-            <div class="about-grid">
-                <div class="about-text">
-                    <p>I am an oceanographer primarily interested in marine heatwaves, western boundary currents, and ocean observing systems. Currently a Senior Research Associate at the Climate Change Research Centre, UNSW Sydney.</p>
-                </div>
-                <div>
-                    <ul class="affiliation-list">
-                        <li>
-                            <span class="role">Senior Research Associate</span>
-                            <a href="https://www.ccrc.unsw.edu.au" target="_blank">Climate Change Research Centre</a>, UNSW Sydney
-                        </li>
-                        <li>
-                            <span class="role">Affiliate</span>
-                            <a href="https://www.cmsi.unsw.edu.au" target="_blank">Centre for Marine Science and Innovation</a>, UNSW Sydney
-                        </li>
-                        <li>
-                            <span class="role">Affiliate</span>
-                            <a href="https://aceas.org.au" target="_blank">ARC Australian Centre for Excellence in Antarctic Science (ACEAS)</a>
-                        </li>
-                    </ul>
+    <section id="about">
+        <h2>About</h2>
+        <div class="about-grid">
+            <div class="about-text">
+                <p>I am a physical oceanographer and Senior Research Associate at the Climate Change Research Centre (CCRC), UNSW Sydney, where I work with Associate Professor Alex Sen Gupta. My current research focuses on marine heatwaves — particularly their subsurface expression — and how boundary current dynamics, mesoscale eddies, and ocean stratification govern their intensity, spatial structure, and ecological impact.</p>
+                <p>I completed my PhD in Physical Oceanography at the University of Cape Town in 2018, and joined UNSW as a postdoctoral researcher in the Coastal and Regional Oceanography Laboratory (working with Professor Moninya Roughan), studying cross-shelf transport and temperature extremes along the East Australian Current. During this time I served as Deputy Leader of the IMOS NSW Moorings programme, contributing to Australia's sustained coastal ocean observation network. I moved to the CCRC in 2023 to focus on subsurface marine heatwaves.</p>
+                <p>Alongside my research I convene the <a href="https://nmalan.github.io/oceania-mhw-seminar" style="color:#0e7490;">Oceania Marine Heatwave Seminar series</a>, serve on the International Working Group on Marine Heatwaves and Australia's Marine National Facility Scientific Advisory Committee, and supervise postgraduate students at UNSW and the University of Cape Town.</p>
+
+                <div class="awards-block">
+                    <h3>Awards &amp; Recognition</h3>
+                    <div class="award-item"><span class="award-year">2023</span><span>Invited Speaker, Gordon Research Seminar on Coastal Ocean Dynamics</span></div>
+                    <div class="award-item"><span class="award-year">2021</span><span>Best Postdoctoral Research Paper, UNSW Centre for Marine Science and Innovation</span></div>
+                    <div class="award-item"><span class="award-year">2018</span><span>Best Participant, Physical Oceanography Dissertation Symposium, NSF</span></div>
+                    <div class="award-item"><span class="award-year">2016</span><span>Best Student Presentation, Agulhas Current Research Symposium, SAEON</span></div>
+                    <div class="award-item"><span class="award-year">2015</span><span>SPACES Travel Fellowship, GEOMAR Centre for Ocean Research, Kiel</span></div>
                 </div>
             </div>
-        </section>
-
-        <section id="research">
-            <h2>Research</h2>
-            <div class="research-interests">
-                <span class="tag">Marine heatwaves</span>
-                <span class="tag">Subsurface ocean</span>
-                <span class="tag">Western boundary currents</span>
-                <span class="tag">Ocean–climate interactions</span>
-                <span class="tag">Southern Ocean</span>
+            <div>
+                <ul class="affiliation-list">
+                    <li>
+                        <span class="role">Senior Research Associate</span>
+                        <a href="https://www.ccrc.unsw.edu.au" target="_blank">Climate Change Research Centre</a>, UNSW Sydney
+                    </li>
+                    <li>
+                        <span class="role">Affiliate</span>
+                        <a href="https://www.cmsi.unsw.edu.au" target="_blank">Centre for Marine Science and Innovation</a>, UNSW Sydney
+                    </li>
+                    <li>
+                        <span class="role">Affiliate</span>
+                        <a href="https://aceas.org.au" target="_blank">ARC Australian Centre for Excellence in Antarctic Science (ACEAS)</a>
+                    </li>
+                </ul>
             </div>
-            <div class="research-text">
-                <p><!-- Research description to be added --></p>
-            </div>
-        </section>
-
-        <section id="publications">
-            <h2>Publications</h2>
-            <!-- Add selected key publications here, then link to full list -->
-            <div class="publication">
-                <div class="pub-title"><!-- Title --></div>
-                <div class="pub-authors"><!-- Authors --></div>
-                <div class="pub-journal"><!-- Journal, year --></div>
-            </div>
-            <p style="margin-top:1rem;">
-                <a href="#" class="scholar-link">Full list on Google Scholar</a>
-            </p>
-        </section>
-
-        <section id="students">
-            <h2>Students &amp; Team</h2>
-
-            <h3 style="margin-bottom:1rem; color:#64748b; font-weight:500; font-size:1rem; text-transform:uppercase; letter-spacing:0.05em;">Current</h3>
-
-            <div class="student">
-                <div class="student-name"><!-- Student name --></div>
-                <div class="student-degree"><!-- PhD / Honours / Masters --></div>
-                <div class="student-topic"><!-- Thesis topic --></div>
-                <span class="student-status status-current">Current</span>
-            </div>
-
-            <h3 style="margin:1.5rem 0 1rem; color:#64748b; font-weight:500; font-size:1rem; text-transform:uppercase; letter-spacing:0.05em;">Past</h3>
-
-            <div class="student">
-                <div class="student-name"><!-- Student name --></div>
-                <div class="student-degree"><!-- Degree --></div>
-                <div class="student-topic"><!-- Thesis topic --></div>
-                <span class="student-status status-past">Graduated</span>
-            </div>
-
-        </section>
-
-        <section id="cv">
-            <h2>CV</h2>
-            <div class="cv-section">
-                <p>Download my full curriculum vitae, including my complete publication list, teaching history, and research funding.</p>
-                <a href="cv.pdf" class="cv-btn">Download CV (PDF)</a>
-            </div>
-        </section>
-
-        <section id="contact">
-            <h2>Contact</h2>
-            <div class="contact-grid">
-                <div class="contact-item">
-                    <span class="contact-label">Email</span>
-                    <span class="contact-value"><a href="mailto:n.malan@unsw.edu.au">n.malan@unsw.edu.au</a></span>
-                </div>
-                <div class="contact-item">
-                    <span class="contact-label">GitHub</span>
-                    <span class="contact-value"><a href="https://github.com/nmalan" target="_blank">github.com/nmalan</a></span>
-                </div>
-                <div class="contact-item">
-                    <span class="contact-label">Google Scholar</span>
-                    <span class="contact-value"><a href="https://scholar.google.co.za/citations?user=ioDaRtYAAAAJ&hl=en" target="_blank">Google Scholar profile</a></span>
-                </div>
-                <div class="contact-item">
-                    <span class="contact-label">ORCID</span>
-                    <span class="contact-value"><a href="https://orcid.org/0000-0001-7568-3908" target="_blank">0000-0001-7568-3908</a></span>
-                </div>
-            </div>
-        </section>
-
-    </main>
-
-    <footer>
-        <div class="container">
-            <p>Neil Malan &nbsp;·&nbsp; Climate Change Research Centre, UNSW Sydney</p>
         </div>
-    </footer>
+    </section>
+
+    <section id="research">
+        <h2>Research</h2>
+        <div class="research-grid">
+            <div class="research-theme">
+                <h3>Subsurface Marine Heatwaves</h3>
+                <p>Marine heatwaves are typically measured at the ocean surface, yet their subsurface expression can differ dramatically in intensity, timing, and spatial extent. My research investigates how heat anomalies penetrate below the mixed layer, their links to mesoscale eddies and boundary current dynamics, and their implications for deep-water ecosystems and species.</p>
+            </div>
+            <div class="research-theme">
+                <h3>Western Boundary Currents</h3>
+                <p>I have worked extensively on both the East Australian Current and the Agulhas Current system — studying eddy-driven cross-shelf transport, current meanders, long-term temperature trends, and the role of boundary currents in driving coastal climate extremes along the Australian and South African coastlines.</p>
+            </div>
+            <div class="research-theme">
+                <h3>Cross-shelf Transport &amp; Coastal Processes</h3>
+                <p>Understanding how heat, nutrients, and biota are exchanged between the open ocean and the continental shelf is central to predicting coastal ecosystem responses to climate change. I combine multi-platform observations (moorings, Argo floats, satellite) with numerical models to quantify these exchanges and their drivers.</p>
+            </div>
+            <div class="research-theme">
+                <h3>Ocean Observing Systems</h3>
+                <p>Long-term, high-quality ocean observations underpin all of my research. As Deputy Leader of the IMOS NSW Moorings programme (2018–2023), I contributed to the design, management, and data stewardship of Australia's sustained coastal mooring network. I am committed to open science and reproducible, observation-based research.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="publications">
+        <h2>Publications</h2>
+        <div class="pub-stats">
+            <div class="pub-stat">
+                <span class="number">20</span>
+                <span class="label">Peer-reviewed articles</span>
+            </div>
+            <div class="pub-stat">
+                <span class="number">441</span>
+                <span class="label">Citations</span>
+            </div>
+            <div class="pub-stat">
+                <span class="number">11</span>
+                <span class="label">h-index</span>
+            </div>
+            <div class="pub-stat">
+                <span class="number">10</span>
+                <span class="label">First-author papers</span>
+            </div>
+        </div>
+
+        <div id="pub-list"></div>
+
+        <a href="https://scholar.google.com/citations?user=ioDaRtYAAAAJ&hl=en" target="_blank" class="scholar-link">Full list on Google Scholar</a>
+    </section>
+
+    <section id="students">
+        <h2>Students &amp; Team</h2>
+
+        <p class="students-subhead">Current</p>
+        <p style="color:#64748b; font-style:italic; font-size:0.95rem; margin-bottom:1.5rem;">Enquiries from prospective students are welcome — please get in touch by email.</p>
+
+        <p class="students-subhead">Completed</p>
+
+        <div class="student">
+            <div class="student-name">Fernando Sobral</div>
+            <div class="student-degree">PhD · UNSW Sydney</div>
+            <div class="student-topic">Cross-shelf heat transport in the East Australian Current</div>
+            <span class="student-status status-past">Graduated 2025</span>
+        </div>
+
+        <div class="student">
+            <div class="student-name">Clea Welch</div>
+            <div class="student-degree">MSc · University of Cape Town</div>
+            <div class="student-topic">Subsurface marine heatwaves in the Mozambique Channel</div>
+            <span class="student-status status-past">Graduated 2025</span>
+        </div>
+
+        <div class="student">
+            <div class="student-name">Yotam Fadida</div>
+            <div class="student-degree">MSc · University of Cape Town</div>
+            <div class="student-topic">Trends in the Agulhas Return Current</div>
+            <span class="student-status status-past">Graduated 2019</span>
+        </div>
+
+        <div class="student">
+            <div class="student-name">Caitlin Sole</div>
+            <div class="student-degree">Honours · University of Cape Town</div>
+            <div class="student-topic">Impact of relative and absolute winds on eddy variability</div>
+            <span class="student-status status-past">Graduated 2016</span>
+        </div>
+
+    </section>
+
+    <section id="teaching">
+        <h2>Teaching</h2>
+
+        <div class="teaching-item">
+            <div class="teaching-role">Course Co-Convenor</div>
+            <div class="teaching-course">MSCI3001 / MSCI5004 — Physical Oceanography</div>
+            <div class="teaching-institution">UNSW Sydney, 2024–present</div>
+        </div>
+
+        <div class="teaching-item">
+            <div class="teaching-role">Teaching Assistant</div>
+            <div class="teaching-course">Ocean and Climate modules</div>
+            <div class="teaching-institution">Sydney Institute of Marine Science, 2022</div>
+        </div>
+
+        <div class="teaching-item">
+            <div class="teaching-role">Teaching Assistant</div>
+            <div class="teaching-course">Physical Oceanography</div>
+            <div class="teaching-institution">University of Cape Town, 2014–2017</div>
+        </div>
+
+        <div class="teaching-item">
+            <div class="teaching-role">Lecturer</div>
+            <div class="teaching-course">Oceanography module — Department of Ichthyology &amp; Fisheries Science</div>
+            <div class="teaching-institution">Rhodes University, 2012–2013</div>
+            <div class="teaching-desc">Taught and coordinated oceanography for 2nd and 3rd year Fisheries students.</div>
+        </div>
+
+    </section>
+
+    <section id="cv">
+        <h2>CV</h2>
+        <div class="cv-section">
+            <p>Download my full curriculum vitae, including my complete publication list, teaching history, research funding, and academic service record.</p>
+            <a href="CV_full-3.pdf" class="cv-btn" target="_blank">Download CV (PDF)</a>
+        </div>
+    </section>
+
+    <section id="contact">
+        <h2>Contact</h2>
+        <div class="contact-grid">
+            <div class="contact-item">
+                <span class="contact-label">Email</span>
+                <span class="contact-value"><a href="mailto:n.malan@unsw.edu.au">n.malan@unsw.edu.au</a></span>
+            </div>
+            <div class="contact-item">
+                <span class="contact-label">Google Scholar</span>
+                <span class="contact-value"><a href="https://scholar.google.com/citations?user=ioDaRtYAAAAJ&hl=en" target="_blank">scholar.google.com</a></span>
+            </div>
+            <div class="contact-item">
+                <span class="contact-label">ORCID</span>
+                <span class="contact-value"><a href="https://orcid.org/0000-0001-7568-3908" target="_blank">0000-0001-7568-3908</a></span>
+            </div>
+            <div class="contact-item">
+                <span class="contact-label">GitHub</span>
+                <span class="contact-value"><a href="https://github.com/nmalan" target="_blank">github.com/nmalan</a></span>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<footer>
+    <div class="container">
+        <p>Neil Malan &nbsp;·&nbsp; Climate Change Research Centre, UNSW Sydney</p>
+    </div>
+</footer>
+
+<script>
+const publications = [
+    {
+        year: 2025,
+        authors: "Smith, K.E., Sen Gupta, A., Burrows, M.T., Filbee-Dexter, K., Hobday, A.J., Holbrook, N.J., Malan, N., Moore, P.J., Oliver, E.C.J., Thomsen, M., Wernberg, T., Zhao, Z., and Smale, D.A.",
+        title: "Ocean extremes as a stress test for marine ecosystems and society",
+        journal: "Nature Climate Change",
+        details: "in press",
+        doi: "10.1038/s41558-025-02269-2",
+        status: "inpress"
+    },
+    {
+        year: 2025,
+        authors: "Malan, N., Sen Gupta, A., Schaeffer, A., Zhang, S., Doblin, M.A., Semolini Pilo, G., Kiss, A.E., Everett, J.D., Behrens, E., Capotondi, A., et al.",
+        title: "Lifting the lid on Marine Heatwaves",
+        journal: "Progress in Oceanography",
+        details: "103539",
+        doi: "10.1016/j.pocean.2025.103539"
+    },
+    {
+        year: 2025,
+        authors: "Smith, K.E., Sen Gupta, A., Amaya, D., Benthuysen, J.A., Burrows, M.T., Capotondi, A., Filbee-Dexter, K., Frölicher, T.L., Hobday, A.J., Holbrook, N.J., et al.",
+        title: "Baseline matters: Challenges and implications of different marine heatwave baselines",
+        journal: "Progress in Oceanography",
+        details: "231, 103404",
+        doi: "10.1016/j.pocean.2025.103404"
+    },
+    {
+        year: 2025,
+        authors: "Baker Welch, C., Malan, N., Mawren, D., Morris, T., Sprintall, J., and Hermes, J.C.",
+        title: "Subsurface manifestation of marine heatwaves in the South West Indian Ocean",
+        journal: "Ocean Science",
+        details: "21, 1695–1712",
+        doi: "10.5194/os-21-1695-2025"
+    },
+    {
+        year: 2024,
+        authors: "Malan, N., Roughan, M., Hemming, M., and Ingleton, T.",
+        title: "Quantifying coastal freshwater extremes during unprecedented rainfall using long timeseries multi-platform salinity observations",
+        journal: "Nature Communications",
+        details: "15, 424",
+        doi: "10.1038/s41467-023-44398-2"
+    },
+    {
+        year: 2024,
+        authors: "Sobral, F., Roughan, M., Malan, N., and Li, J.",
+        title: "Mean-state and seasonal variability in temperature structure and heat transport in the East Australian Current System from a multi-decadal regional ocean model",
+        journal: "Journal of Geophysical Research: Oceans",
+        details: "129, e2023JC020438",
+        doi: "10.1029/2023JC020438"
+    },
+    {
+        year: 2023,
+        authors: "Hemming, M.P., Roughan, M., Malan, N., and Schaeffer, A.",
+        title: "Observed multi-decadal trends in subsurface temperature adjacent to the East Australian Current",
+        journal: "Ocean Science",
+        details: "19(4), 1145–1162"
+    },
+    {
+        year: 2023,
+        authors: "Malan, N., Roughan, M., Hemming, M., and Schaeffer, A.",
+        title: "Mesoscale circulation controls chlorophyll concentrations in the East Australian Current separation zone",
+        journal: "Journal of Geophysical Research: Oceans",
+        details: "128(4), e2022JC019361",
+        doi: "10.1029/2022JC019361"
+    },
+    {
+        year: 2022,
+        authors: "Malan, N., Roughan, M., Stanley, G.J., Holmes, R., and Li, J.",
+        title: "Quantifying cross-shelf transport in the East Australian Current system: a budget-based approach",
+        journal: "Journal of Physical Oceanography",
+        details: "52(10), 2555–2572",
+        doi: "10.1175/JPO-D-21-0193.1"
+    },
+    {
+        year: 2022,
+        authors: "Phillips, L.R., Malan, N., Roughan, M., Harcourt, R., Jonsen, I., Cox, M., Brierley, A.S., Slip, D., Wilkins, A., and Carroll, G.",
+        title: "Coastal seascape variability in the intensifying East Australian Current Southern Extension",
+        journal: "Frontiers in Marine Science",
+        details: "2022"
+    },
+    {
+        year: 2022,
+        authors: "Schilling, H.T., Hewitt, D.E., Malan, N., Taylor, M.D., and Johnson, D.D.",
+        title: "Cross-jurisdictional larval supply essential for eastern Australian spanner crabs (Ranina ranina)",
+        journal: "Marine and Freshwater Research",
+        details: "73(11), 1352–1367",
+        doi: "10.1071/MF21348"
+    },
+    {
+        year: 2021,
+        authors: "Fadida, Y., Malan, N., Cronin, M.F., and Hermes, J.",
+        title: "Trends in the Agulhas Return Current",
+        journal: "Deep Sea Research Part I: Oceanographic Research Papers",
+        details: "175, 103573",
+        doi: "10.1016/j.dsr.2021.103573"
+    },
+    {
+        year: 2021,
+        authors: "Malan, N., Roughan, M., and Kerry, C.",
+        title: "The rate of coastal temperature rise adjacent to a warming western boundary current is nonuniform with latitude",
+        journal: "Geophysical Research Letters",
+        details: "48(3), e2020GL090751",
+        doi: "10.1029/2020GL090751"
+    },
+    {
+        year: 2020,
+        authors: "Malan, N., Archer, M., Roughan, M., Cetina-Heredia, P., Hemming, M., Rocha, C., Schaeffer, A., Suthers, I., and Queiroz, E.",
+        title: "Eddy-driven cross-shelf transport in the East Australian Current separation zone",
+        journal: "Journal of Geophysical Research: Oceans",
+        details: "125(2), e2019JC015613",
+        doi: "10.1029/2019JC015613"
+    },
+    {
+        year: 2019,
+        authors: "d'Hotman, J.S., Malan, N., Collins, C., de Vos, M., Lumpkin, R., Morris, T., and Hermes, J.",
+        title: "The use of a jet reference frame to analyze drifter trajectories in the Agulhas Current",
+        journal: "Journal of Geophysical Research: Oceans",
+        details: "124(6), 4238–4247",
+        doi: "10.1029/2018JC014850"
+    },
+    {
+        year: 2019,
+        authors: "Malan, N., Durgadoo, J.V., Biastoch, A., Reason, C., and Hermes, J.",
+        title: "Multidecadal wind variability drives temperature shifts on the Agulhas Bank",
+        journal: "Journal of Geophysical Research: Oceans",
+        details: "124(5), 3021–3035",
+        doi: "10.1029/2018JC014614"
+    },
+    {
+        year: 2018,
+        authors: "Dilmahamod, A.F., Aguiar-González, B., Penven, P., Reason, C.J.C., De Ruijter, W.P.M., Malan, N., and Hermes, J.C.",
+        title: "SIDDIES corridor: a major east-west pathway of long-lived surface and subsurface eddies crossing the subtropical South Indian Ocean",
+        journal: "Journal of Geophysical Research: Oceans",
+        details: "123(8), 5406–5425",
+        doi: "10.1029/2018JC013828"
+    },
+    {
+        year: 2018,
+        authors: "Malan, N., Backeberg, B., Biastoch, A., Durgadoo, J.V., Samuelsen, A., Reason, C., and Hermes, J.",
+        title: "Agulhas Current meanders facilitate shelf-slope exchange on the Eastern Agulhas Bank",
+        journal: "Journal of Geophysical Research: Oceans",
+        details: "2018",
+        doi: "10.1029/2017JC013602"
+    },
+    {
+        year: 2018,
+        authors: "Malan, N.",
+        title: "Are icebergs a realistic option for augmenting Cape Town's water supply?",
+        journal: "Water Wheel",
+        details: "17(2), 32–34",
+        type: "other"
+    },
+    {
+        year: 2013,
+        authors: "Malan, N., Reason, C.J.C., and Loveday, B.R.",
+        title: "Variability in tropical cyclone heat potential over the Southwest Indian Ocean",
+        journal: "Journal of Geophysical Research: Oceans",
+        details: "118(12), 6734–6746",
+        doi: "10.1002/2013jc008958"
+    }
+];
+
+function highlightName(authStr) {
+    return authStr
+        .replace(/\bMalan, N\.\b/g, '<strong>Malan, N.</strong>')
+        .replace(/\bNeil Malan\b/g, '<strong>Neil Malan</strong>')
+        .replace(/\bN\. Malan\b/g, '<strong>N. Malan</strong>');
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    const container = document.getElementById('pub-list');
+    const peerReviewed = publications.filter(p => p.type !== 'other');
+    const other = publications.filter(p => p.type === 'other');
+
+    function renderPub(pub) {
+        const div = document.createElement('div');
+        div.className = 'publication';
+
+        let badge = '';
+        if (pub.status === 'inpress') badge = '<span class="pub-badge badge-inpress">In Press</span>';
+
+        let journalLine = `<em>${pub.journal}</em>`;
+        if (pub.details) journalLine += `, ${pub.details}`;
+        if (pub.doi) journalLine += ` &nbsp;<a href="https://doi.org/${pub.doi}" target="_blank" class="pub-link">DOI</a>`;
+
+        div.innerHTML = `
+            <div class="pub-title">${pub.title}${badge}</div>
+            <div class="pub-authors">${highlightName(pub.authors)}</div>
+            <div class="pub-journal">${journalLine}</div>
+        `;
+        container.appendChild(div);
+    }
+
+    peerReviewed.forEach(renderPub);
+
+    if (other.length > 0) {
+        const divider = document.createElement('p');
+        divider.style.cssText = 'margin:1.5rem 0 0.75rem; color:#64748b; font-weight:700; font-size:0.8rem; text-transform:uppercase; letter-spacing:0.06em;';
+        divider.textContent = 'Other Writing';
+        container.appendChild(divider);
+        other.forEach(renderPub);
+    }
+});
+</script>
 
 </body>
 </html>
