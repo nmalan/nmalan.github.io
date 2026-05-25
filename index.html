@@ -59,6 +59,38 @@
             font-weight: 300;
         }
 
+        .header-cta {
+            margin-top: 1.25rem;
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .cta-btn {
+            display: inline-block;
+            padding: 0.5rem 1.2rem;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
+            background: white;
+            color: #0c4a6e;
+        }
+
+        .cta-btn:hover { opacity: 0.85; }
+
+        .cta-btn-outline {
+            background: transparent;
+            color: white;
+            border: 2px solid rgba(255,255,255,0.55);
+        }
+
+        .cta-btn-outline:hover {
+            border-color: white;
+            background: rgba(255,255,255,0.1);
+        }
+
         .container {
             max-width: 1000px;
             margin: 0 auto;
@@ -199,6 +231,42 @@
             width: 2.5rem;
         }
 
+        /* Highlights */
+
+        .highlights-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.25rem;
+        }
+
+        .highlight-card {
+            padding: 1.5rem;
+            background: linear-gradient(135deg, #0c4a6e 0%, #0e7490 100%);
+            border-radius: 8px;
+            color: white;
+        }
+
+        .highlight-card .hl-number {
+            font-size: 2rem;
+            font-weight: 800;
+            opacity: 0.25;
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .highlight-card h3 {
+            color: white;
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .highlight-card p {
+            font-size: 0.85rem;
+            opacity: 0.85;
+            line-height: 1.6;
+        }
+
         /* Research */
 
         .research-grid {
@@ -229,6 +297,90 @@
         .research-grid .research-theme:last-child:nth-child(odd) {
             grid-column: 1 / -1;
         }
+
+        /* Selected publications */
+
+        .sel-theme-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            color: #0e7490;
+            margin: 1.25rem 0 0.5rem;
+        }
+
+        .sel-theme-label:first-of-type { margin-top: 0; }
+
+        .pub-toggle-btn {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 0.5rem 1.2rem;
+            border: 2px solid #0e7490;
+            border-radius: 4px;
+            color: #0e7490;
+            font-weight: 600;
+            font-size: 0.875rem;
+            cursor: pointer;
+            background: white;
+            transition: all 0.2s;
+        }
+
+        .pub-toggle-btn:hover {
+            background: #0e7490;
+            color: white;
+        }
+
+        /* Data & Code */
+
+        .data-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .data-card {
+            padding: 1rem 1.25rem;
+            background: #f8fafc;
+            border-left: 3px solid #0e7490;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .data-card a {
+            font-weight: 600;
+            color: #0c4a6e;
+            text-decoration: none;
+            font-size: 0.95rem;
+        }
+
+        .data-card a:hover { text-decoration: underline; }
+
+        .data-card p {
+            color: #64748b;
+            font-size: 0.85rem;
+            margin-top: 0.2rem;
+        }
+
+        .data-card .data-tag {
+            display: inline-block;
+            margin-top: 0.4rem;
+            padding: 0.1rem 0.5rem;
+            background: #e0f2fe;
+            color: #0c4a6e;
+            border-radius: 10px;
+            font-size: 0.72rem;
+            font-weight: 600;
+        }
+
+        .data-subhead {
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #64748b;
+            margin: 1.5rem 0 0.75rem;
+        }
+
+        .data-subhead:first-of-type { margin-top: 0; }
 
         /* Publications */
 
@@ -515,7 +667,9 @@
         @media (max-width: 768px) {
             .header-text h1 { font-size: 1.8rem; }
             .about-grid { grid-template-columns: 1fr; }
+            .highlights-grid { grid-template-columns: 1fr; }
             .research-grid { grid-template-columns: 1fr; }
+            .data-grid { grid-template-columns: 1fr; }
             .contact-grid { grid-template-columns: 1fr; }
             nav a { padding: 0.75rem 0.9rem; font-size: 0.9rem; }
             section { padding: 1.5rem; }
@@ -532,6 +686,11 @@
                 <h1>Neil Malan</h1>
                 <p class="title">Senior Research Associate · Physical Oceanographer</p>
                 <p class="affiliations">Climate Change Research Centre &amp; Centre for Marine Science and Innovation, UNSW Sydney &nbsp;·&nbsp; ACEAS</p>
+                <div class="header-cta">
+                    <a href="#publications" class="cta-btn">View publications</a>
+                    <a href="CV_full-3.pdf" class="cta-btn cta-btn-outline" target="_blank">Download CV</a>
+                    <a href="#contact" class="cta-btn cta-btn-outline">Get in touch</a>
+                </div>
             </div>
         </div>
     </div>
@@ -544,6 +703,7 @@
         <li><a href="#publications">Publications</a></li>
         <li><a href="#students">Students</a></li>
         <li><a href="#teaching">Teaching</a></li>
+        <li><a href="#data">Data &amp; Code</a></li>
         <li><a href="https://nmalan.github.io/oceania-mhw-seminar" class="external">Seminars</a></li>
         <li><a href="#cv">CV</a></li>
         <li><a href="#contact">Contact</a></li>
@@ -584,6 +744,26 @@
                         <a href="https://aceas.org.au" target="_blank">ARC Australian Centre for Excellence in Antarctic Science (ACEAS)</a>
                     </li>
                 </ul>
+            </div>
+        </div>
+    </section>
+
+    <section id="highlights" style="padding:1.5rem 2rem;">
+        <div class="highlights-grid">
+            <div class="highlight-card">
+                <div class="hl-number">01</div>
+                <h3>Subsurface marine heatwaves &amp; ocean extremes</h3>
+                <p>Investigating how heat anomalies penetrate below the ocean surface, and what drives their intensity, spatial structure, and ecological impact.</p>
+            </div>
+            <div class="highlight-card">
+                <div class="hl-number">02</div>
+                <h3>Cross-shelf exchange in western boundary current systems</h3>
+                <p>Quantifying how the East Australian and Agulhas currents drive the exchange of heat, nutrients, and organisms between the open ocean and the coast.</p>
+            </div>
+            <div class="highlight-card">
+                <div class="hl-number">03</div>
+                <h3>Sustained ocean observations &amp; open science</h3>
+                <p>Contributing to Australia's coastal mooring network and building reproducible, observation-based workflows for the broader ocean science community.</p>
             </div>
         </div>
     </section>
@@ -635,7 +815,11 @@
             </div>
         </div>
 
-        <div id="pub-list"></div>
+        <h3 style="color:#0c4a6e; font-size:1.1rem; margin-bottom:1rem;">Selected Publications</h3>
+        <div id="pub-selected"></div>
+
+        <button class="pub-toggle-btn" id="pubToggleBtn" onclick="toggleFullList()">Show all 20 publications</button>
+        <div id="pub-list" style="display:none; margin-top:1rem;"></div>
 
         <a href="https://scholar.google.com/citations?user=ioDaRtYAAAAJ&hl=en" target="_blank" class="scholar-link">Full list on Google Scholar</a>
     </section>
@@ -708,6 +892,58 @@
 
     </section>
 
+    <section id="data">
+        <h2>Data &amp; Code</h2>
+
+        <p class="data-subhead">Code &amp; Data for Published Papers</p>
+        <div class="data-grid">
+            <div class="data-card">
+                <a href="https://github.com/nmalan/Salinity-extremes-Ncomms" target="_blank">Salinity-extremes-Ncomms</a>
+                <p>Code and data for the Nature Communications 2024 paper on coastal freshwater extremes during unprecedented rainfall.</p>
+                <span class="data-tag">Nature Communications 2024</span>
+            </div>
+            <div class="data-card">
+                <a href="https://github.com/nmalan/EAC-dipole" target="_blank">EAC-dipole</a>
+                <p>Code for the JGR 2020 paper on eddy-driven cross-shelf transport in the East Australian Current separation zone.</p>
+                <span class="data-tag">JGR: Oceans 2020</span>
+            </div>
+            <div class="data-card">
+                <a href="https://github.com/nmalan/Agulhas_meanders" target="_blank">Agulhas_meanders</a>
+                <p>Data and plotting code for the JGR 2018 paper on Agulhas Current meanders and shelf-slope exchange.</p>
+                <span class="data-tag">JGR: Oceans 2018</span>
+            </div>
+            <div class="data-card">
+                <a href="https://github.com/nmalan/ARC_trends" target="_blank">ARC_trends</a>
+                <p>Analysis code for the Deep Sea Research 2021 paper on trends in the Agulhas Return Current.</p>
+                <span class="data-tag">Deep Sea Research 2021</span>
+            </div>
+        </div>
+
+        <p class="data-subhead">Tools &amp; Tutorials</p>
+        <div class="data-grid">
+            <div class="data-card">
+                <a href="https://github.com/nmalan/IMOS-tutorials" target="_blank">IMOS-tutorials</a>
+                <p>Example code for accessing and plotting data from Australia's Integrated Marine Observing System (IMOS).</p>
+                <span class="data-tag">Tutorial</span>
+            </div>
+            <div class="data-card">
+                <a href="https://github.com/nmalan/xarray_tools" target="_blank">xarray_tools</a>
+                <p>A lightweight xarray extension with common oceanographic data processing utilities.</p>
+                <span class="data-tag">Python package</span>
+            </div>
+            <div class="data-card">
+                <a href="https://github.com/nmalan/ROMS-PUG" target="_blank">ROMS-PUG</a>
+                <p>Jupyter notebooks from the UNSW Oceanography Python User Group covering ROMS output analysis.</p>
+                <span class="data-tag">Notebooks</span>
+            </div>
+            <div class="data-card">
+                <a href="https://github.com/nmalan/MHW-workshop" target="_blank">MHW-workshop</a>
+                <p>Materials from marine heatwave analysis workshops, including detection, characterisation, and visualisation.</p>
+                <span class="data-tag">Workshop</span>
+            </div>
+        </div>
+    </section>
+
     <section id="cv">
         <h2>CV</h2>
         <div class="cv-section">
@@ -755,7 +991,8 @@ const publications = [
         journal: "Nature Climate Change",
         details: "in press",
         doi: "10.1038/s41558-025-02269-2",
-        status: "inpress"
+        status: "inpress",
+        selected: true, theme: "Marine heatwaves &amp; ocean extremes"
     },
     {
         year: 2025,
@@ -763,7 +1000,8 @@ const publications = [
         title: "Lifting the lid on Marine Heatwaves",
         journal: "Progress in Oceanography",
         details: "103539",
-        doi: "10.1016/j.pocean.2025.103539"
+        doi: "10.1016/j.pocean.2025.103539",
+        selected: true, theme: "Marine heatwaves &amp; ocean extremes"
     },
     {
         year: 2025,
@@ -787,7 +1025,8 @@ const publications = [
         title: "Quantifying coastal freshwater extremes during unprecedented rainfall using long timeseries multi-platform salinity observations",
         journal: "Nature Communications",
         details: "15, 424",
-        doi: "10.1038/s41467-023-44398-2"
+        doi: "10.1038/s41467-023-44398-2",
+        selected: true, theme: "Coastal freshwater extremes"
     },
     {
         year: 2024,
@@ -810,7 +1049,8 @@ const publications = [
         title: "Mesoscale circulation controls chlorophyll concentrations in the East Australian Current separation zone",
         journal: "Journal of Geophysical Research: Oceans",
         details: "128(4), e2022JC019361",
-        doi: "10.1029/2022JC019361"
+        doi: "10.1029/2022JC019361",
+        selected: true, theme: "Physical–biological coupling"
     },
     {
         year: 2022,
@@ -818,7 +1058,8 @@ const publications = [
         title: "Quantifying cross-shelf transport in the East Australian Current system: a budget-based approach",
         journal: "Journal of Physical Oceanography",
         details: "52(10), 2555–2572",
-        doi: "10.1175/JPO-D-21-0193.1"
+        doi: "10.1175/JPO-D-21-0193.1",
+        selected: true, theme: "Cross-shelf transport &amp; EAC"
     },
     {
         year: 2022,
@@ -857,7 +1098,8 @@ const publications = [
         title: "Eddy-driven cross-shelf transport in the East Australian Current separation zone",
         journal: "Journal of Geophysical Research: Oceans",
         details: "125(2), e2019JC015613",
-        doi: "10.1029/2019JC015613"
+        doi: "10.1029/2019JC015613",
+        selected: true, theme: "Cross-shelf transport &amp; EAC"
     },
     {
         year: 2019,
@@ -873,7 +1115,8 @@ const publications = [
         title: "Multidecadal wind variability drives temperature shifts on the Agulhas Bank",
         journal: "Journal of Geophysical Research: Oceans",
         details: "124(5), 3021–3035",
-        doi: "10.1029/2018JC014614"
+        doi: "10.1029/2018JC014614",
+        selected: true, theme: "Agulhas Current &amp; South African systems"
     },
     {
         year: 2018,
@@ -916,38 +1159,56 @@ function highlightName(authStr) {
         .replace(/\bN\. Malan\b/g, '<strong>N. Malan</strong>');
 }
 
+function makePubDiv(pub) {
+    const div = document.createElement('div');
+    div.className = 'publication';
+    let badge = pub.status === 'inpress' ? '<span class="pub-badge badge-inpress">In Press</span>' : '';
+    let journalLine = `<em>${pub.journal}</em>`;
+    if (pub.details) journalLine += `, ${pub.details}`;
+    if (pub.doi) journalLine += ` &nbsp;<a href="https://doi.org/${pub.doi}" target="_blank" class="pub-link">DOI</a>`;
+    div.innerHTML = `
+        <div class="pub-title">${pub.title}${badge}</div>
+        <div class="pub-authors">${highlightName(pub.authors)}</div>
+        <div class="pub-journal">${journalLine}</div>
+    `;
+    return div;
+}
+
+function toggleFullList() {
+    const list = document.getElementById('pub-list');
+    const btn = document.getElementById('pubToggleBtn');
+    const visible = list.style.display !== 'none';
+    list.style.display = visible ? 'none' : 'block';
+    btn.textContent = visible ? 'Show all 20 publications' : 'Hide full list';
+}
+
 document.addEventListener('DOMContentLoaded', function () {
-    const container = document.getElementById('pub-list');
+    const selectedContainer = document.getElementById('pub-selected');
+    const fullContainer = document.getElementById('pub-list');
+
+    // Selected publications grouped by theme
+    const selectedPubs = publications.filter(p => p.selected);
+    const themes = [...new Set(selectedPubs.map(p => p.theme))];
+    themes.forEach(theme => {
+        const label = document.createElement('p');
+        label.className = 'sel-theme-label';
+        label.innerHTML = theme;
+        selectedContainer.appendChild(label);
+        selectedPubs.filter(p => p.theme === theme).forEach(pub => {
+            selectedContainer.appendChild(makePubDiv(pub));
+        });
+    });
+
+    // Full list (hidden by default)
     const peerReviewed = publications.filter(p => p.type !== 'other');
     const other = publications.filter(p => p.type === 'other');
-
-    function renderPub(pub) {
-        const div = document.createElement('div');
-        div.className = 'publication';
-
-        let badge = '';
-        if (pub.status === 'inpress') badge = '<span class="pub-badge badge-inpress">In Press</span>';
-
-        let journalLine = `<em>${pub.journal}</em>`;
-        if (pub.details) journalLine += `, ${pub.details}`;
-        if (pub.doi) journalLine += ` &nbsp;<a href="https://doi.org/${pub.doi}" target="_blank" class="pub-link">DOI</a>`;
-
-        div.innerHTML = `
-            <div class="pub-title">${pub.title}${badge}</div>
-            <div class="pub-authors">${highlightName(pub.authors)}</div>
-            <div class="pub-journal">${journalLine}</div>
-        `;
-        container.appendChild(div);
-    }
-
-    peerReviewed.forEach(renderPub);
-
+    peerReviewed.forEach(pub => fullContainer.appendChild(makePubDiv(pub)));
     if (other.length > 0) {
         const divider = document.createElement('p');
         divider.style.cssText = 'margin:1.5rem 0 0.75rem; color:#64748b; font-weight:700; font-size:0.8rem; text-transform:uppercase; letter-spacing:0.06em;';
         divider.textContent = 'Other Writing';
-        container.appendChild(divider);
-        other.forEach(renderPub);
+        fullContainer.appendChild(divider);
+        other.forEach(pub => fullContainer.appendChild(makePubDiv(pub)));
     }
 });
 </script>
