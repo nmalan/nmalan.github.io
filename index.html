@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Neil Malan — Physical Oceanographer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -12,7 +15,7 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             line-height: 1.6;
             color: #2c3e50;
             background-color: #f8f9fa;
@@ -664,6 +667,21 @@
             font-size: 0.9rem;
         }
 
+        /* Scroll animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .highlight-card.fade-in:nth-child(2) { transition-delay: 0.1s; }
+        .highlight-card.fade-in:nth-child(3) { transition-delay: 0.2s; }
+
         @media (max-width: 768px) {
             .header-text h1 { font-size: 1.8rem; }
             .about-grid { grid-template-columns: 1fr; }
@@ -712,7 +730,7 @@
 
 <main class="container">
 
-    <section id="about">
+    <section id="about" class="fade-in">
         <h2>About</h2>
         <div class="about-grid">
             <div class="about-text">
@@ -740,20 +758,20 @@
         </div>
     </section>
 
-    <section id="highlights" style="padding:1.5rem 2rem;">
+    <section id="highlights" class="fade-in" style="padding:1.5rem 2rem;">
         <h2>Research Focus</h2>
         <div class="highlights-grid">
-            <div class="highlight-card">
+            <div class="highlight-card fade-in">
                 <div class="hl-number">01</div>
                 <h3>Subsurface marine heatwaves &amp; ocean extremes</h3>
                 <p>Investigating how heat anomalies penetrate below the ocean surface, and what drives their intensity, spatial structure, and ecological impact.</p>
             </div>
-            <div class="highlight-card">
+            <div class="highlight-card fade-in">
                 <div class="hl-number">02</div>
                 <h3>Cross-shelf exchange in western boundary current systems</h3>
                 <p>Quantifying how the East Australian and Agulhas currents drive the exchange of heat, nutrients, and organisms between the open ocean and the coast.</p>
             </div>
-            <div class="highlight-card">
+            <div class="highlight-card fade-in">
                 <div class="hl-number">03</div>
                 <h3>Sustained ocean observations &amp; open science</h3>
                 <p>Contributing to Australia's coastal mooring network and building reproducible, observation-based workflows for the broader ocean science community.</p>
@@ -761,7 +779,7 @@
         </div>
     </section>
 
-    <section id="research">
+    <section id="research" class="fade-in">
         <h2>Research</h2>
         <div class="research-grid">
             <div class="research-theme">
@@ -787,7 +805,7 @@
         </div>
     </section>
 
-    <section id="publications">
+    <section id="publications" class="fade-in">
         <h2>Publications</h2>
         <div class="pub-stats">
             <div class="pub-stat">
@@ -817,7 +835,7 @@
         <a href="https://scholar.google.com/citations?user=ioDaRtYAAAAJ&hl=en" target="_blank" class="scholar-link">Full list on Google Scholar</a>
     </section>
 
-    <section id="students">
+    <section id="students" class="fade-in">
         <h2>Students &amp; Team</h2>
 
         <p class="students-subhead">Current</p>
@@ -869,7 +887,7 @@
 
     </section>
 
-    <section id="teaching">
+    <section id="teaching" class="fade-in">
         <h2>Teaching</h2>
 
         <div class="teaching-item">
@@ -899,7 +917,7 @@
 
     </section>
 
-    <section id="data">
+    <section id="data" class="fade-in">
         <h2>Data &amp; Code</h2>
 
         <div class="data-card" style="max-width:600px;">
@@ -910,7 +928,7 @@
 
     </section>
 
-    <section id="cv">
+    <section id="cv" class="fade-in">
         <h2>CV</h2>
         <div class="cv-section">
             <p>Download my full curriculum vitae, including my complete publication list, teaching history, and academic service record.</p>
@@ -918,7 +936,7 @@
         </div>
     </section>
 
-    <section id="contact">
+    <section id="contact" class="fade-in">
         <h2>Contact</h2>
         <div class="contact-grid">
             <div class="contact-item">
@@ -1146,6 +1164,17 @@ function toggleFullList() {
     list.style.display = visible ? 'none' : 'block';
     btn.textContent = visible ? 'Show all 20 publications' : 'Hide full list';
 }
+
+const fadeObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            fadeObserver.unobserve(entry.target);
+        }
+    });
+}, { threshold: 0.08 });
+
+document.querySelectorAll('.fade-in').forEach(el => fadeObserver.observe(el));
 
 document.addEventListener('DOMContentLoaded', function () {
     const selectedContainer = document.getElementById('pub-selected');
