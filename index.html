@@ -1150,7 +1150,7 @@ function makePubDiv(pub) {
     const div = document.createElement('div');
     div.className = 'publication';
     let badge = pub.status === 'inpress' ? '<span class="pub-badge badge-inpress">In Press</span>' : '';
-    let journalLine = `<em>${pub.journal}</em>`;
+    let journalLine = `${pub.year} · <em>${pub.journal}</em>`;
     if (pub.details) journalLine += `, ${pub.details}`;
     if (pub.doi) journalLine += ` &nbsp;<a href="https://doi.org/${pub.doi}" target="_blank" class="pub-link">DOI</a>`;
     div.innerHTML = `
