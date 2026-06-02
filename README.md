@@ -8,4 +8,4 @@ Visitor stats (page views, countries, referrers) are tracked via [GoatCounter](h
 
 ## Google Scholar stats
 
-Citation counts are updated automatically every Monday at 03:00 UTC via the `update-scholar-stats` GitHub Actions workflow. The workflow fetches data using the `scholarly` Python package and commits any changes to `index.html`.
+Citation counts (lines 818 and 822 of `index.html`) must be updated manually by editing `index.html` directly. Check your current stats at [Google Scholar](https://scholar.google.com) and update the `Citations` and `h-index` values as needed.
