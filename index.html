@@ -234,42 +234,6 @@
             width: 2.5rem;
         }
 
-        /* Highlights */
-
-        .highlights-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1.25rem;
-        }
-
-        .highlight-card {
-            padding: 1.5rem;
-            background: linear-gradient(135deg, #0c4a6e 0%, #0e7490 100%);
-            border-radius: 8px;
-            color: white;
-        }
-
-        .highlight-card .hl-number {
-            font-size: 2rem;
-            font-weight: 800;
-            opacity: 0.25;
-            line-height: 1;
-            margin-bottom: 0.5rem;
-        }
-
-        .highlight-card h3 {
-            color: white;
-            font-size: 0.95rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-        }
-
-        .highlight-card p {
-            font-size: 0.85rem;
-            opacity: 0.85;
-            line-height: 1.6;
-        }
-
         /* Research */
 
         .research-grid {
@@ -756,9 +720,6 @@
             transform: translateY(0);
         }
 
-        .highlight-card.fade-in:nth-child(2) { transition-delay: 0.1s; }
-        .highlight-card.fade-in:nth-child(3) { transition-delay: 0.2s; }
-
         @media (max-width: 768px) {
             .header-text h1 { font-size: 1.8rem; }
             .about-grid { grid-template-columns: 1fr; }
@@ -843,27 +804,6 @@
             <p>I am an oceanographer interested in how physical processes shape life along our coastlines — where the deep ocean meets the continental shelf, how extreme events translate into biological and societal impacts, and how currents, eddies, and mixing control the distribution of heat, nutrients, and organisms. This has pulled me into work on ocean extremes, coastal variability, cross-shelf exchange, and western boundary current dynamics.</p>
             <p>I think a lot about marine heatwaves — how we define and detect them, what's happening beneath the surface where ecosystems actually live, and what the consequences are for fisheries, habitats, and coastal communities — alongside the physical dynamics of the East Australian and Agulhas Current systems, where I keep coming back to how eddies, meanders, and boundary currents move heat, nutrients, and organisms across the shelf, shaping productivity, connectivity, and conditions for life.</p>
             <p>I'm based at the Climate Change Research Centre at UNSW Sydney, working with Alex Sen Gupta. I did my PhD at the University of Cape Town and still collaborate actively with researchers there. I run a marine heatwave seminar series, do some teaching, and work with some great students.</p>
-        </div>
-    </section>
-
-    <section id="highlights" class="fade-in" style="padding:1.5rem 2rem;">
-        <h2>Research Focus</h2>
-        <div class="highlights-grid">
-            <div class="highlight-card fade-in" style="background: linear-gradient(135deg, rgba(12,74,110,0.86) 0%, rgba(14,116,144,0.80) 100%), url('schematic_base.png') center/cover no-repeat;">
-                <div class="hl-number">01</div>
-                <h3>Subsurface marine heatwaves &amp; ocean extremes</h3>
-                <p>Investigating how heat anomalies penetrate below the ocean surface, how their subsurface structure differs from surface signals, and what the consequences are for fisheries, habitats, and the ecosystems that live in the water column.</p>
-            </div>
-            <div class="highlight-card fade-in" style="background: linear-gradient(135deg, rgba(12,74,110,0.60) 0%, rgba(14,116,144,0.52) 100%), url('Dipole_schematic.png') center/cover no-repeat;">
-                <div class="hl-number">02</div>
-                <h3>Cross-shelf exchange in western boundary current systems</h3>
-                <p>Quantifying how the East Australian and Agulhas currents drive the exchange of heat, nutrients, and organisms between the open ocean and the shelf — setting the conditions for coastal productivity, larval dispersal, and ecosystem connectivity.</p>
-            </div>
-            <div class="highlight-card fade-in" style="background: linear-gradient(135deg, rgba(12,74,110,0.65) 0%, rgba(14,116,144,0.58) 100%), url('Cover_pic_1200x675_credit.png') center/cover no-repeat;">
-                <div class="hl-number">03</div>
-                <h3>Sustained ocean observations &amp; open science</h3>
-                <p>Contributing to Australia's coastal mooring network and building reproducible, observation-based workflows for the broader ocean science community.</p>
-            </div>
         </div>
     </section>
 
