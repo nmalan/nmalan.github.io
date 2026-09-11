@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research Student Resources — Neil Malan</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            background-color: #f8f9fa;
+        }
+
+        header {
+            background: linear-gradient(135deg, rgba(12,74,110,0.75) 0%, rgba(14,116,144,0.65) 100%), url('images/DSC_0588.JPG') center 35% / cover no-repeat;
+            color: white;
+            padding: 2.5rem 0 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        header h1 { font-size: 2.2rem; font-weight: 700; margin-bottom: 0.25rem; }
+        header p { font-size: 1rem; opacity: 0.9; max-width: 640px; }
+
+        .container { max-width: 1000px; margin: 0 auto; padding: 0 2rem; }
+
+        nav {
+            background: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            position: sticky; top: 0; z-index: 100;
+        }
+
+        nav ul { list-style: none; display: flex; justify-content: center; flex-wrap: wrap; }
+
+        nav a {
+            display: block;
+            padding: 1rem 1.2rem;
+            color: #0c4a6e;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        nav a:hover { background: #e0f2fe; color: #0e7490; }
+
+        main { padding: 3rem 0; }
+
+        section {
+            background: white;
+            margin-bottom: 2rem;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            color: #0c4a6e;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 3px solid #0e7490;
+            font-size: 1.8rem;
+        }
+
+        .intro { color: #475569; margin-bottom: 1.5rem; }
+
+        a { color: #0e7490; }
+
+        /* Workflow steps */
+        .steps { list-style: none; counter-reset: step; }
+
+        .step {
+            counter-increment: step;
+            position: relative;
+            padding: 1rem 1.25rem 1rem 4rem;
+            margin-bottom: 0.9rem;
+            background: #f8fafc;
+            border-left: 3px solid #0e7490;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .step::before {
+            content: counter(step);
+            position: absolute;
+            left: 1.1rem; top: 1rem;
+            width: 1.9rem; height: 1.9rem;
+            border-radius: 50%;
+            background: #0e7490;
+            color: white;
+            font-weight: 700;
+            font-size: 0.9rem;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        .step-title { font-weight: 600; color: #1e293b; font-size: 0.98rem; }
+        .step p { color: #475569; font-size: 0.9rem; margin-top: 0.2rem; }
+
+        .step-tag {
+            display: inline-block;
+            margin-left: 0.4rem;
+            padding: 0.05rem 0.5rem;
+            border-radius: 10px;
+            font-size: 0.68rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            vertical-align: middle;
+        }
+
+        .tag-human { background: #e0f2fe; color: #0c4a6e; }
+        .tag-ai { background: #ede9fe; color: #5b21b6; }
+
+        .callout {
+            margin-top: 1.25rem;
+            padding: 0.9rem 1.25rem;
+            background: #fffbeb;
+            border-left: 3px solid #d97706;
+            border-radius: 0 4px 4px 0;
+            color: #78350f;
+            font-size: 0.88rem;
+        }
+
+        /* Reading cards */
+        .resource-card {
+            padding: 1.1rem 1.25rem;
+            background: #f8fafc;
+            border-left: 3px solid #0e7490;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .resource-card .title { font-weight: 600; color: #0c4a6e; font-size: 0.98rem; }
+        .resource-card .ref { color: #64748b; font-size: 0.85rem; margin: 0.15rem 0 0.5rem; }
+        .resource-card p { color: #475569; font-size: 0.9rem; }
+
+        footer {
+            background: #1e293b;
+            color: rgba(255,255,255,0.7);
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            header h1 { font-size: 1.7rem; }
+            nav a { padding: 0.75rem 0.9rem; font-size: 0.9rem; }
+            section { padding: 1.5rem; }
+            .step { padding-left: 3.5rem; }
+            .step::before { left: 0.8rem; }
+        }
+    </style>
+    <script data-goatcounter="https://nmalan.goatcounter.com/count"
+            async src="//gc.zgo.at/count.js"></script>
+</head>
+<body>
+
+<header>
+    <div class="container">
+        <h1>Research Student Resources</h1>
+        <p>Practical guides for students working with me — finding and managing the literature, and getting a first draft written.</p>
+    </div>
+</header>
+
+<nav>
+    <ul>
+        <li><a href="index.html">← Home</a></li>
+        <li><a href="#literature">Literature review</a></li>
+        <li><a href="#writing">Writing</a></li>
+    </ul>
+</nav>
+
+<main class="container">
+
+    <section id="literature">
+        <h2>AI-assisted literature review workflow</h2>
+        <p class="intro">A workflow that uses AI to widen and interrogate your reading without replacing it. Steps 1, 2, 4 and 5 are the usual process; steps 3 and 6 are where AI adds value.</p>
+
+        <ol class="steps">
+            <li class="step">
+                <div class="step-title">Search as usual <span class="step-tag tag-human">Human</span></div>
+                <p>Start with the reference lists of papers you already know, and browse <a href="https://scholar.google.com" target="_blank">Google Scholar</a>.</p>
+            </li>
+            <li class="step">
+                <div class="step-title">Start a Zotero collection and download the PDFs <span class="step-tag tag-human">Human</span></div>
+                <p>Create a collection for the topic in <a href="https://www.zotero.org" target="_blank">Zotero</a> and add the papers you have found, with their PDFs.</p>
+            </li>
+            <li class="step">
+                <div class="step-title">Ask an AI to find connected papers <span class="step-tag tag-ai">AI</span></div>
+                <p>Give the AI of your choice your reference list and your topic, and ask it to find connected papers, ranked by importance. Require it to cross-check every DOI.</p>
+            </li>
+            <li class="step">
+                <div class="step-title">Download all the PDFs <span class="step-tag tag-human">Human</span></div>
+                <p>This is the manual step, although Zotero can retrieve some PDFs for you.</p>
+            </li>
+            <li class="step">
+                <div class="step-title">Skim the papers as usual <span class="step-tag tag-human">Human</span></div>
+            </li>
+            <li class="step">
+                <div class="step-title">Interrogate your knowledge in NotebookLM <span class="step-tag tag-ai">AI</span></div>
+                <p>Put all the PDFs into a <a href="https://notebooklm.google.com" target="_blank">NotebookLM</a> collection and question it about the literature you have gathered.</p>
+            </li>
+        </ol>
+
+        <div class="callout">AI tools can invent references. Check that each DOI points to the paper the AI says it does before adding it to your collection.</div>
+    </section>
+
+    <section id="writing">
+        <h2>Writing</h2>
+        <div class="resource-card">
+            <div class="title">How to Write Backwards</div>
+            <div class="ref">Magnusson, W.E. (1996). <em>Bulletin of the Ecological Society of America</em>, 77(2), 88. <a href="https://doi.org/10.2307/20168029" target="_blank">DOI</a></div>
+            <p>A one-page guide to drafting a paper or thesis chapter in reverse: write the conclusions first, then only the results needed to support them, the methods needed to understand those results, a discussion limited to what modifies, extends or contradicts the conclusions, and finally a short introduction that poses the questions the conclusions answer.</p>
+        </div>
+    </section>
+
+</main>
+
+<footer>
+    <div class="container">
+        <p>Neil Malan &nbsp;·&nbsp; Climate Change Research Centre, UNSW Sydney</p>
+    </div>
+</footer>
+
+</body>
+</html>
