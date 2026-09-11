@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Methods — Freshwater Coastal Ocean Simulator</title>
+<script>
+MathJax = {
+  tex: { inlineMath: [['$','$']], displayMath: [['$$','$$']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea'] }
+};
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: #0d1b2a;
+    color: #c8d8e8;
+    line-height: 1.7;
+    padding: 0;
+  }
+  .page {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 40px 32px 80px;
+  }
+  .back-btn {
+    display: inline-block;
+    margin-bottom: 28px;
+    padding: 6px 14px;
+    background: #13243a;
+    border: 1px solid #1e3a56;
+    border-radius: 6px;
+    color: #7eb8e0;
+    text-decoration: none;
+    font-size: 0.82rem;
+    cursor: pointer;
+  }
+  .back-btn:hover { background: #1e3a56; }
+  h1 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #7eb8e0;
+    margin-bottom: 6px;
+  }
+  .tagline {
+    font-size: 0.88rem;
+    color: #5a7a9a;
+    margin-bottom: 36px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #1e3a56;
+  }
+  h2 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #7eb8e0;
+    margin: 36px 0 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #1e3a56;
+  }
+  h3 {
+    font-size: 0.98rem;
+    font-weight: 600;
+    color: #a0c8e8;
+    margin: 22px 0 8px;
+  }
+  p { margin-bottom: 12px; }
+  mjx-container { overflow-x: auto; }
+  .eq-block {
+    background: #0a1628;
+    border: 1px solid #1e3a56;
+    border-radius: 6px;
+    padding: 14px 20px;
+    margin: 14px 0;
+    overflow-x: auto;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 14px 0;
+    font-size: 0.88rem;
+  }
+  th {
+    background: #13243a;
+    color: #7eb8e0;
+    padding: 8px 12px;
+    text-align: left;
+    border: 1px solid #1e3a56;
+  }
+  td {
+    padding: 7px 12px;
+    border: 1px solid #1e3a56;
+    vertical-align: top;
+  }
+  tr:nth-child(even) td { background: #0f1e2e; }
+  code {
+    font-family: 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
+    background: #0a1628;
+    color: #88d0a0;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 0.85em;
+  }
+  .note {
+    background: #0a1e30;
+    border-left: 3px solid #2a7ab8;
+    padding: 10px 14px;
+    border-radius: 0 6px 6px 0;
+    margin: 14px 0;
+    font-size: 0.88rem;
+    color: #a0b8cc;
+  }
+  ul, ol {
+    margin: 10px 0 10px 22px;
+  }
+  li { margin-bottom: 4px; }
+  .ref { font-size: 0.82rem; color: #7a8fa6; margin-bottom: 8px; padding-left: 16px; text-indent: -16px; }
+  .ref em { color: #a0b8cc; }
+</style>
+</head>
+<body>
+<div class="page">
+
+<a class="back-btn" onclick="window.close()" href="#">← Back to Simulator</a>
+
+<h1>Methods: 1-D Freshwater Coastal Ocean Simulator</h1>
+<p class="tagline">A simplified vertical diffusion column model demonstrating the barrier layer effect under freshwater forcing</p>
+
+<h2>1. Physical Motivation</h2>
+<p>When extreme rainfall or flooding dramatically increases river discharge into coastal waters, a lens of low-salinity (fresh) water spreads across the ocean surface. This freshwater is lighter than the underlying saltwater and resists mixing downward. The result is a <strong>barrier layer</strong> — a layer of warm, salty water isolated between a shallow halocline above and the deeper thermocline below.</p>
+<p>Heat that would normally be mixed upward and lost to the atmosphere is instead trapped at depth, driving anomalously warm subsurface temperatures. This mechanism is thought to intensify tropical cyclones and marine heatwaves by preconditioning deep warm reservoirs that can later be upwelled or entrained by storm-driven mixing.</p>
+
+<h2>2. Model Formulation</h2>
+
+<h3>2.1 Domain</h3>
+<p>The water column is discretised into $N_z = 80$ uniformly spaced vertical levels over a total depth of 200 m:</p>
+<div class="eq-block">$$\Delta z = \frac{200\,\text{m}}{N_z} = 2.5\,\text{m}$$</div>
+<p>Levels are indexed from the surface ($k = 0$) downward. The depth centre of level $k$ is</p>
+<div class="eq-block">$$z_k = -\!\left(k + \tfrac{1}{2}\right)\Delta z.$$</div>
+
+<h3>2.2 State Variables</h3>
+<table>
+  <tr><th>Symbol</th><th>Description</th><th>Units</th></tr>
+  <tr><td>$T(z,t)$</td><td>Potential temperature</td><td>°C</td></tr>
+  <tr><td>$S(z,t)$</td><td>Practical salinity</td><td>psu</td></tr>
+  <tr><td>$\rho(z,t)$</td><td>In-situ density (derived)</td><td>kg m⁻³</td></tr>
+</table>
+
+<h3>2.3 Governing Equations</h3>
+<p>Both tracers evolve by vertical diffusion only (no horizontal advection or advection by a mean flow):</p>
+<div class="eq-block">$$\frac{\partial T}{\partial t} = \frac{\partial}{\partial z}\!\left[\kappa(z,t)\,\frac{\partial T}{\partial z}\right] + \mathcal{F}_T,$$</div>
+<div class="eq-block">$$\frac{\partial S}{\partial t} = \frac{\partial}{\partial z}\!\left[\kappa(z,t)\,\frac{\partial S}{\partial z}\right] + \mathcal{F}_S,$$</div>
+<p>where $\kappa(z,t)$ is the turbulent diffusivity (m² s⁻¹) and $\mathcal{F}$ represents surface boundary forcing terms (Section 4).</p>
+
+<h3>2.4 Equation of State</h3>
+<p>Seawater density is computed from a linearised equation of state about a reference state ($\rho_0 = 1025\,\text{kg\,m}^{-3}$):</p>
+<div class="eq-block">$$\rho = \rho_0\bigl(1 - \alpha_T\,T + \beta_S\,S\bigr)$$</div>
+<table>
+  <tr><th>Parameter</th><th>Value</th><th>Description</th></tr>
+  <tr><td>$\alpha_T$</td><td>$2\times10^{-4}\ °\text{C}^{-1}$</td><td>Thermal expansion coefficient</td></tr>
+  <tr><td>$\beta_S$</td><td>$7.6\times10^{-4}\ \text{psu}^{-1}$</td><td>Haline contraction coefficient</td></tr>
+</table>
+<div class="note">The linear EOS is adequate for shallow coastal waters (0–200 m) at tropical temperatures. It neglects thermobaric effects important below ~500 m.</div>
+
+<h2>3. Mixing Parameterisation</h2>
+
+<h3>3.1 Richardson-number-dependent diffusivity</h3>
+<p>The vertical diffusivity is decomposed into a background term and a wind-driven shear term:</p>
+<div class="eq-block">$$\kappa(z,t) = \kappa_{\text{bg}} + \kappa_{\text{wind}}\,f(Ri),$$</div>
+<p>with background diffusivity $\kappa_{\text{bg}} = 10^{-5}\ \text{m}^2\ \text{s}^{-1}$ (representing molecular diffusion and internal wave breaking).</p>
+
+<h3>3.2 Buoyancy frequency and Richardson number</h3>
+<p>The gradient Richardson number at each interface between adjacent cells is</p>
+<div class="eq-block">$$Ri(z) = \frac{N^2}{\left|\partial u/\partial z\right|^2},$$</div>
+<p>where the <strong>buoyancy frequency squared</strong> measures the restoring force of stable stratification:</p>
+<div class="eq-block">$$N^2 = -\frac{g}{\rho_0}\frac{\partial\rho}{\partial z}.$$</div>
+<p>$N^2 > 0$ indicates stable stratification (density increasing downward); $N^2 \leq 0$ indicates convective instability.</p>
+<p>The vertical shear $|\partial u/\partial z|^2$ is not explicitly resolved in a 1-D column. Instead, it is parameterised via the friction velocity $u_*$ as a proxy for wind-driven shear through the water column:</p>
+<div class="eq-block">$$\left|\frac{\partial u}{\partial z}\right|^2 \approx \left(\frac{u_*}{\Delta z}\right)^2.$$</div>
+
+<h3>3.3 Depth decay of wind-driven turbulence</h3>
+<p>In reality, wind-driven turbulence is strongest at the ocean surface and decays with depth. This is captured by an exponential profile for the shear proxy:</p>
+<div class="eq-block">$$\left|\frac{\partial u}{\partial z}\right|^2(z) \approx \left(\frac{u_*}{\Delta z}\right)^2 e^{2z/H_{\text{decay}}},$$</div>
+<p>where $H_{\text{decay}} = 10\ \text{m}$ is the e-folding depth for turbulent kinetic energy. At $z = -10\ \text{m}$, the shear is reduced to $e^{-2} \approx 14$% of its surface value. Below about 20–25 m the shear becomes negligible, so wind-driven mixing is effectively confined to the near-surface layer. This is the key feature that allows a freshwater halocline to form with physically realistic flux magnitudes: below the e-folding depth, wind turbulence is too weak to mix the halocline away.</p>
+
+<h3>3.4 Mixing suppression function</h3>
+<p>The function $f(Ri)$ follows the simplified form of Large et al. (1994):</p>
+<div class="eq-block">$$f(Ri) = \frac{1}{1 + 5\,Ri}, \quad Ri \geq 0.$$</div>
+<p>This captures the essential physics:</p>
+<ul>
+  <li>When $Ri \to 0$ (no stratification): $f \to 1$, mixing is at maximum — wind can readily mix the column.</li>
+  <li>When $Ri \to \infty$ (strong halocline): $f \to 0$, mixing is suppressed — the freshwater lid prevents heat from escaping upward.</li>
+</ul>
+<p>This suppression of mixing at the halocline is the <strong>central mechanism</strong> by which freshwater input traps heat at depth.</p>
+
+<h3>3.4 Friction velocity</h3>
+<p>Wind stress $\tau$ and friction velocity $u_*$ are computed as:</p>
+<div class="eq-block">$$\tau = \rho_a\,C_D\,U_{10}^2, \qquad u_* = \sqrt{\frac{\tau}{\rho_0}},$$</div>
+<p>with air density $\rho_a = 1.225\ \text{kg\,m}^{-3}$, bulk drag coefficient $C_D = 1.2\times10^{-3}$, and 10 m wind speed $U_{10}$ (set by the user in m s⁻¹).</p>
+
+<h2>4. Surface Boundary Conditions</h2>
+
+<h3>4.1 Heat flux</h3>
+<p>A constant net surface heat flux is applied, negative representing net <em>cooling</em>:</p>
+<div class="eq-block">$$Q_{\text{net}} = -80\ \text{W\,m}^{-2}.$$</div>
+<p>This is applied as a temperature tendency in the surface grid cell ($k=0$):</p>
+<div class="eq-block">$$\left.\frac{\partial T}{\partial t}\right|_{k=0} \mathrel{+}= \frac{Q_{\text{net}}}{\rho_0\,c_p\,\Delta z},$$</div>
+<p>with $c_p = 4000\ \text{J\,kg}^{-1}\,°\text{C}^{-1}$. The negative (cooling) sign is physically motivated: extreme rainfall and flooding events are accompanied by heavy cloud cover that reduces solar irradiance, while evaporative and longwave cooling continue. Under these conditions the net surface flux is commonly negative. This is also the scenario that makes the barrier layer mechanism visible: in the control run, surface cooling diffuses downward and gradually cools the mixed layer; in the freshwater run, the halocline insulates the warm barrier layer from this cooling, resulting in a <strong>warm anomaly at depth</strong> in the freshwater minus control difference.</p>
+
+<h3>4.2 Freshwater flux — volumetric (real FW) approach</h3>
+<p>Many ocean models apply freshwater as a <strong>virtual salt flux</strong> — diluting the surface cell salinity without changing cell volumes or displacing the density profile. This misses a distinct physical mechanism: when freshwater enters at rate $E$ (m s⁻¹) it physically raises the free surface $\eta$ and pushes the entire water column downward by the same amount, independently of any lateral or baroclinic dynamics (Huang 1993; Griffies et al. 2000).</p>
+<p>This model uses the <strong>real freshwater flux</strong> approach. The free surface evolves as</p>
+<div class="eq-block">$$\frac{d\eta}{dt} = E(t),$$</div>
+<p>and the thermocline descends by $\eta(t) = \int_0^t E\,\mathrm{d}t'$. Numerically, the downward displacement is represented as first-order upwind advection of the column by a fractional cell shift $\alpha = E\,\Delta t / \Delta z$ each time step:</p>
+<div class="eq-block">$$T_k^{n+1} = (1-\alpha)\,T_k^n + \alpha\,T_{k-1}^n, \quad k = 1,\ldots,N_z-1$$</div>
+<div class="eq-block">$$S_k^{n+1} = (1-\alpha)\,S_k^n + \alpha\,S_{k-1}^n$$</div>
+<p>At the surface cell, incoming freshwater has zero salinity and rain temperature equal to the surface ocean temperature ($T_{\text{rain}} = T_0$), so:</p>
+<div class="eq-block">$$S_0^{n+1} = (1-\alpha)\,S_0^n, \qquad T_0^{n+1} = T_0^n.$$</div>
+<p>The bottom cell loses water to the sub-domain reservoir (no inflow from below), so salt inventory below 200 m is not conserved — a known limitation of z-coordinate columns with a rigid bottom boundary.</p>
+<p>The time-varying flux ramps linearly up over $\tau_{\text{ramp}} = \min(2\,\text{days},\ 0.3\,\tau_{\text{fw}})$, holds at full strength, then cuts off at the user-specified duration $\tau_{\text{fw}}$:</p>
+<div class="eq-block">$$E(t) = E_0 \times \begin{cases} t / \tau_{\text{ramp}}, & 0 \leq t < \tau_{\text{ramp}} \\ 1, & \tau_{\text{ramp}} \leq t \leq \tau_{\text{fw}} \\ 0, & t > \tau_{\text{fw}} \end{cases}$$</div>
+<p>$E_0$ is converted from the user-supplied rate in mm hr⁻¹ to m s⁻¹. At default settings (5 mm hr⁻¹ for 5 days) the cumulative input is $\eta \approx 0.6\,\text{m}$; at maximum settings (20 mm hr⁻¹ for 14 days) $\eta \approx 6.7\,\text{m}$, producing a multi-cell thermocline depression visible as a dipole in the anomaly plot.</p>
+
+<h3>4.3 Bottom boundary</h3>
+<p>No-flux condition at the base of the column:</p>
+<div class="eq-block">$$\left.\kappa\,\frac{\partial T}{\partial z}\right|_{z=-200\,\text{m}} = \left.\kappa\,\frac{\partial S}{\partial z}\right|_{z=-200\,\text{m}} = 0.$$</div>
+
+<h2>5. Numerical Scheme</h2>
+<p>Diffusion is integrated with a <strong>forward Euler</strong> scheme on a staggered grid. Interface diffusivities are computed as arithmetic means:</p>
+<div class="eq-block">$$\kappa_{k+1/2} = \tfrac{1}{2}\bigl(\kappa_k + \kappa_{k+1}\bigr).$$</div>
+<p>The update for an interior cell is:</p>
+<div class="eq-block">$$T_k^{n+1} = T_k^n + \frac{\Delta t}{\Delta z^2}\Bigl[\kappa_{k-1/2}\bigl(T_{k-1}^n - T_k^n\bigr) - \kappa_{k+1/2}\bigl(T_k^n - T_{k+1}^n\bigr)\Bigr].$$</div>
+<p>The time step is $\Delta t = 10\ \text{min}$. The von Neumann stability criterion for explicit diffusion requires $\kappa\,\Delta t / \Delta z^2 \leq 0.5$. An additional hard clamp of $\kappa \leq 0.45\,\Delta z^2/\Delta t$ is applied inside the diffusion step. With $\kappa_{\text{max}} = 5\times10^{-3}\ \text{m}^2\ \text{s}^{-1}$, $\Delta t = 600\ \text{s}$, $\Delta z = 2.5\ \text{m}$:</p>
+<div class="eq-block">$$r = \frac{\kappa_{\text{max}}\,\Delta t}{\Delta z^2} = \frac{5\times10^{-3}\times600}{6.25} \approx 0.48 < 0.5. \checkmark$$</div>
+
+<h2>6. Initial Conditions</h2>
+<p>Temperature is initialised as a <strong>uniform mixed layer</strong> from the surface to $h_{\text{thermo}}$, below which it decays exponentially toward the deep value:</p>
+<div class="eq-block">$$T(z,0) = \begin{cases} T_{\text{surf}}, & -z \leq h_{\text{thermo}} \\ T_{\text{deep}} + (T_{\text{surf}} - T_{\text{deep}})\,e^{(-z - h_{\text{thermo}})/10\,\text{m}}, & -z > h_{\text{thermo}} \end{cases}$$</div>
+<p>with $T_{\text{surf}} = 28\,°\text{C}$ and $T_{\text{deep}} = T_{\text{surf}} - \Delta T$ (user-controlled $\Delta T$). The 10 m e-folding scale in the thermocline gives a sharp but numerically smooth transition. A uniform mixed layer is physically appropriate (wind mixing homogenises the layer) and ensures that the halocline-induced change in mixing depth is clearly visible in the model output.</p>
+<p>Salinity is initialised to a uniform $S_0 = 35\ \text{psu}$, representing pre-event offshore conditions.</p>
+
+<h2>7. Key Diagnostics</h2>
+
+<h3>7.1 Temperature anomaly</h3>
+<p>The temperature anomaly is the difference between the freshwater experiment and the control run at the same time and depth:</p>
+<div class="eq-block">$$\Delta T(z,t) = T_{\text{FW}}(z,t) - T_{\text{ctrl}}(z,t).$$</div>
+<p>A <strong>positive anomaly at depth</strong> indicates that the freshwater-induced halocline has suppressed upward heat flux, leaving the subsurface <em>warmer</em> than it would have been without freshwater input. This is the barrier layer warming signal.</p>
+
+<h3>7.2 Hovmöller diagram</h3>
+<p>The Hovmöller diagram plots a scalar field (here, temperature or $\Delta T$) as a function of time (x-axis) and depth (y-axis). It allows simultaneous visualisation of the surface warming from heat flux, the progressive deepening of the mixed layer, the formation of the halocline, and the trapping of heat below it.</p>
+
+<h2>8. Limitations and Caveats</h2>
+<table>
+  <tr><th>Missing process</th><th>Effect on results</th></tr>
+  <tr><td>Horizontal advection / upwelling</td><td>Horizontal salinity gradients drive baroclinic currents that spread the freshwater anomaly laterally; the 1-D column cannot represent this</td></tr>
+  <tr><td>Explicit momentum equation</td><td>Wind mixing is parameterised via $u_*$ rather than resolving the Ekman layer; near-inertial oscillations are absent</td></tr>
+  <tr><td>Nonlinear equation of state</td><td>Thermobaricity and cabbeling effects are neglected; important below ~500 m</td></tr>
+  <tr><td>Shortwave penetration</td><td>Solar radiation is deposited entirely in the surface cell; in reality it penetrates 10–50 m depending on water clarity</td></tr>
+  <tr><td>Evaporation feedback</td><td>Evaporation concentrates salt at the surface and removes latent heat; both effects are absent</td></tr>
+  <tr><td>Tidal mixing</td><td>An important source of interior diapycnal mixing in shallow coastal regions, not parameterised here</td></tr>
+  <tr><td>River plume geometry</td><td>Freshwater spreading from a river mouth is inherently 3-D; the 1-D column cannot capture lateral buoyancy gradients or plume fronts</td></tr>
+  <tr><td>Background stratification history</td><td>The column has no memory of prior freshwater events, seasonal stratification buildup, or pre-existing barrier layers</td></tr>
+</table>
+
+<div class="note">A more rigorous implementation using <strong>Oceananigans.jl</strong> would resolve the momentum budget explicitly (with KPP or $k$-$\varepsilon$ closure), include the full nonlinear TEOS-10 equation of state, shortwave penetration, and allow 2-D or 3-D domains with lateral buoyancy gradients.</div>
+
+<h2>9. References</h2>
+<p class="ref">Griffies, S. M., Böning, C., Bryan, F. O., Chassignet, E. P., Gerdes, R., Hasumi, H., … Webb, D. J. (2000). Developments in ocean climate modelling. <em>Ocean Modelling</em>, 2(3–4), 123–192.</p>
+<p class="ref">Huang, R. X. (1993). Real freshwater flux as a natural boundary condition for the salinity balance and thermohaline circulation forced by evaporation and precipitation. <em>Journal of Physical Oceanography</em>, 23(11), 2428–2446.</p>
+<p class="ref">Large, W. G., McWilliams, J. C., &amp; Doney, S. C. (1994). Oceanic vertical mixing: A review and a model with a nonlocal boundary layer parameterization. <em>Reviews of Geophysics</em>, 32(4), 363–403.</p>
+<p class="ref">Lukas, R., &amp; Lindstrom, E. (1991). The mixed layer of the western equatorial Pacific Ocean. <em>Journal of Geophysical Research: Oceans</em>, 96(S01), 3343–3357.</p>
+<p class="ref">Sprintall, J., &amp; Tomczak, M. (1992). Evidence of the barrier layer in the surface layer of the tropics. <em>Journal of Geophysical Research: Oceans</em>, 97(C5), 7305–7316.</p>
+<p class="ref">Price, J. F., Weller, R. A., &amp; Pinkel, R. (1986). Diurnal cycling: Observations and models of the upper ocean response to diurnal heating, cooling and wind mixing. <em>Journal of Geophysical Research: Oceans</em>, 91(C7), 8411–8427.</p>
+
+</div>
+</body>
+</html>

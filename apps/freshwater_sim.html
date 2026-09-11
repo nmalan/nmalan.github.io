@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Freshwater Coastal Ocean Simulator</title>
+<script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: #0d1b2a;
+    color: #e0e6f0;
+    min-height: 100vh;
+    padding: 16px;
+  }
+  h1 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #7eb8e0;
+    margin-bottom: 4px;
+  }
+  .subtitle {
+    font-size: 0.8rem;
+    color: #7a8fa6;
+    margin-bottom: 14px;
+  }
+  .top-bar {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+  /* Controls */
+  .controls {
+    background: #13243a;
+    border: 1px solid #1e3a56;
+    border-radius: 8px;
+    padding: 12px 16px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: flex-end;
+    margin-bottom: 14px;
+  }
+  .ctrl-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 140px;
+  }
+  .ctrl-group label {
+    font-size: 0.72rem;
+    color: #7a8fa6;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .ctrl-group .val-display {
+    font-size: 0.85rem;
+    color: #7eb8e0;
+    font-weight: 600;
+    min-width: 50px;
+    display: inline-block;
+  }
+  .ctrl-group .label-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  input[type=range] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 4px;
+    border-radius: 2px;
+    background: #1e3a56;
+    outline: none;
+    cursor: pointer;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #7eb8e0;
+    cursor: pointer;
+  }
+  .btn-row {
+    display: flex;
+    gap: 8px;
+    align-items: flex-end;
+    margin-left: auto;
+  }
+  button {
+    padding: 8px 18px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: background 0.15s;
+  }
+  #runBtn {
+    background: #2a7ab8;
+    color: #fff;
+  }
+  #runBtn:hover { background: #3a8fcc; }
+  #runBtn:disabled { background: #1e3a56; color: #4a6a8a; cursor: wait; }
+  #docsBtn {
+    background: #1e3a56;
+    color: #7eb8e0;
+    border: 1px solid #2a5a80;
+  }
+  #docsBtn:hover { background: #254a6a; }
+
+  /* Toggle */
+  .toggle-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8rem;
+    color: #7a8fa6;
+  }
+  .toggle-wrap span.active { color: #7eb8e0; font-weight: 600; }
+  .toggle {
+    position: relative;
+    width: 44px;
+    height: 22px;
+    cursor: pointer;
+  }
+  .toggle input { display: none; }
+  .toggle-slider {
+    position: absolute;
+    inset: 0;
+    background: #1e3a56;
+    border-radius: 11px;
+    transition: background 0.2s;
+  }
+  .toggle-slider::before {
+    content: '';
+    position: absolute;
+    width: 16px; height: 16px;
+    left: 3px; top: 3px;
+    background: #7eb8e0;
+    border-radius: 50%;
+    transition: transform 0.2s;
+  }
+  .toggle input:checked + .toggle-slider { background: #2a5a80; }
+  .toggle input:checked + .toggle-slider::before { transform: translateX(22px); }
+
+  /* Variable selector */
+  .var-select {
+    display: flex;
+    gap: 2px;
+    background: #0d1b2a;
+    border: 1px solid #1e3a56;
+    border-radius: 6px;
+    padding: 2px;
+  }
+  .var-btn {
+    padding: 5px 12px;
+    border: none;
+    border-radius: 4px;
+    background: transparent;
+    color: #7a8fa6;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+  }
+  .var-btn:hover { color: #c8d8e8; }
+  .var-btn.active { background: #1e3a56; color: #7eb8e0; }
+
+  /* Status */
+  #status {
+    font-size: 0.75rem;
+    color: #4a7a9a;
+    min-height: 16px;
+    margin-bottom: 8px;
+  }
+  #status.running { color: #f0a040; }
+  #status.done { color: #40c080; }
+  #status.error { color: #e05050; }
+
+  /* Plot grids */
+  .hov-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .plot-card {
+    background: #13243a;
+    border: 1px solid #1e3a56;
+    border-radius: 8px;
+    padding: 8px;
+  }
+  .plot-card h3 {
+    font-size: 0.78rem;
+    color: #7a8fa6;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .profile-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .scrubber-row {
+    background: #13243a;
+    border: 1px solid #1e3a56;
+    border-radius: 8px;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 10px;
+  }
+  .scrubber-row label {
+    font-size: 0.78rem;
+    color: #7a8fa6;
+    white-space: nowrap;
+  }
+  .scrubber-row input[type=range] { flex: 1; }
+  #timeLabel {
+    font-size: 0.85rem;
+    color: #7eb8e0;
+    font-weight: 600;
+    min-width: 55px;
+  }
+
+  .plot-div { width: 100%; }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div>
+    <h1>Freshwater Coastal Ocean Simulator</h1>
+    <div class="subtitle">1-D column model · 100 m NSW coastal shelf · Richardson-number mixing · barrier layer dynamics · volumetric FW flux (free-surface rise + thermocline depression) · adjustable surface heat flux</div>
+  </div>
+  <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+    <div class="var-select">
+      <button class="var-btn active" id="vbtn-T"   onclick="onVarSelect('T')">Temperature</button>
+      <button class="var-btn"        id="vbtn-S"   onclick="onVarSelect('S')">Salinity</button>
+      <button class="var-btn"        id="vbtn-rho" onclick="onVarSelect('rho')">Density</button>
+    </div>
+    <div class="toggle-wrap">
+      <span id="lbl-abs" class="active">Absolute</span>
+      <label class="toggle">
+        <input type="checkbox" id="anomalyToggle" onchange="onToggle()">
+        <div class="toggle-slider"></div>
+      </label>
+      <span id="lbl-anom">Anomaly (FW−Ctrl)</span>
+    </div>
+    <button id="docsBtn" onclick="window.open('METHODS.html','_blank')">Methods ↗</button>
+  </div>
+</div>
+
+<!-- Controls -->
+<div class="controls">
+  <div class="ctrl-group">
+    <div class="label-row">
+      <label>Surface–Bottom ΔT</label>
+      <span class="val-display" id="v-dT">8 °C</span>
+    </div>
+    <input type="range" id="s-dT" min="3" max="15" step="1" value="8"
+           oninput="document.getElementById('v-dT').textContent=this.value+' °C'">
+  </div>
+  <div class="ctrl-group">
+    <div class="label-row">
+      <label>Thermocline depth</label>
+      <span class="val-display" id="v-hT">20 m</span>
+    </div>
+    <input type="range" id="s-hT" min="10" max="60" step="5" value="20"
+           oninput="document.getElementById('v-hT').textContent=this.value+' m'">
+  </div>
+  <div class="ctrl-group">
+    <div class="label-row">
+      <label>FW flux</label>
+      <span class="val-display" id="v-fw">5 mm/hr</span>
+    </div>
+    <input type="range" id="s-fw" min="0.5" max="100" step="0.5" value="5"
+           oninput="document.getElementById('v-fw').textContent=parseFloat(this.value).toFixed(1)+' mm/hr'">
+  </div>
+  <div class="ctrl-group">
+    <div class="label-row">
+      <label>FW duration</label>
+      <span class="val-display" id="v-fd">5 days</span>
+    </div>
+    <input type="range" id="s-fd" min="1" max="14" step="1" value="5"
+           oninput="document.getElementById('v-fd').textContent=this.value+' days'">
+  </div>
+  <div class="ctrl-group">
+    <div class="label-row">
+      <label>Wind speed</label>
+      <span class="val-display" id="v-ws">5 m/s</span>
+    </div>
+    <input type="range" id="s-ws" min="0" max="15" step="1" value="5"
+           oninput="document.getElementById('v-ws').textContent=this.value+' m/s'">
+  </div>
+  <div class="ctrl-group">
+    <div class="label-row">
+      <label>Surface temperature</label>
+      <span class="val-display" id="v-ts">24 °C</span>
+    </div>
+    <input type="range" id="s-ts" min="18" max="30" step="1" value="24"
+           oninput="document.getElementById('v-ts').textContent=this.value+' °C'">
+  </div>
+  <div class="ctrl-group">
+    <div class="label-row">
+      <label>Surface heat flux</label>
+      <span class="val-display" id="v-qn">−20 W m⁻²</span>
+    </div>
+    <input type="range" id="s-qn" min="0" max="120" step="5" value="20"
+           oninput="const v=parseFloat(this.value);document.getElementById('v-qn').textContent=(v===0?'0':'−'+v)+' W m⁻²'">
+  </div>
+  <div class="btn-row">
+    <button id="runBtn" onclick="runSim()">▶ Run Simulation</button>
+  </div>
+</div>
+
+<div id="status">Adjust sliders then click Run.</div>
+
+<!-- Hovmöller panels -->
+<div class="hov-grid">
+  <div class="plot-card">
+    <h3>Control run — Temperature (°C)</h3>
+    <div id="hov-ctrl" class="plot-div" style="height:300px;"></div>
+  </div>
+  <div class="plot-card">
+    <h3 id="hov-fw-title">Freshwater run — Temperature (°C)</h3>
+    <div id="hov-fw" class="plot-div" style="height:300px;"></div>
+  </div>
+</div>
+
+<!-- Time scrubber -->
+<div class="scrubber-row">
+  <label>Profile time:</label>
+  <input type="range" id="scrubber" min="0" max="100" step="1" value="100"
+         oninput="updateProfiles()">
+  <span id="timeLabel">— days</span>
+</div>
+
+<!-- Profile panels -->
+<div class="profile-grid">
+  <div class="plot-card">
+    <h3 id="prof-T-title">Temperature profiles</h3>
+    <div id="prof-T" class="plot-div" style="height:300px;"></div>
+  </div>
+  <div class="plot-card">
+    <h3 id="prof-S-title">Salinity profiles</h3>
+    <div id="prof-S" class="plot-div" style="height:300px;"></div>
+  </div>
+  <div class="plot-card">
+    <h3 id="prof-rho-title">Density profiles</h3>
+    <div id="prof-rho" class="plot-div" style="height:300px;"></div>
+  </div>
+</div>
+
+<script>
+// ─────────────────────────────────────────────
+// PHYSICS MODEL
+// ─────────────────────────────────────────────
+
+const NZ   = 40;        // depth levels (100 m / 2.5 m cell)
+const ZMAX = 100;       // m — NSW coastal shelf
+const dz   = ZMAX / NZ;
+const z    = Array.from({length: NZ}, (_, k) => -(k + 0.5) * dz); // negative = depth below surface
+
+// Linear equation of state
+const RHO0 = 1025.0;  // kg/m³
+const ALPHA = 2e-4;   // thermal expansion (1/°C)
+const BETA  = 7.6e-4; // haline contraction (1/psu)
+const G     = 9.81;
+
+function eos(T, S) {
+  return RHO0 * (1 - ALPHA * T + BETA * S);
+}
+
+// Compute density at each level
+function density(T, S) {
+  return T.map((t, k) => eos(t, S[k]));
+}
+
+// ─── Mixing coefficient ───────────────────────
+// κ(z) = κ_bg + κ_wind·f(Ri)
+// Ri = N² / S² where we proxy S² ~ (u*/Δz)²
+// f(Ri) = 1/(1 + 5·Ri)   (Large et al. 1994 simplified)
+
+const K_BG       = 1e-5;   // m²/s background (internal waves + molecular)
+const K_WIND_MAX = 5e-3;   // m²/s max wind-driven (stable for dt=10min, dz=2.5m)
+const H_DECAY    = 10;     // m  e-folding depth for wind-driven turbulence
+
+function uStar(windSpeed) {
+  const rhoA = 1.225;
+  const Cd   = 1.2e-3;
+  const tau  = rhoA * Cd * windSpeed * windSpeed;
+  return Math.sqrt(tau / RHO0);
+}
+
+function mixingCoeffs(T, S, windSpeed) {
+  const rho = density(T, S);
+  const us  = uStar(windSpeed);
+  const K   = new Array(NZ).fill(K_BG);
+
+  // Shear velocity scale: proxy for (∂u/∂z)² ~ (u*/dz)²
+  const shear2 = (us / dz) * (us / dz);
+
+  // windFactor: scales with u*², capped at 1 at reference u*=0.01 m/s (~14 m/s)
+  const windFactor = Math.min((us / 0.01) * (us / 0.01), 1.0);
+
+  for (let k = 0; k < NZ - 1; k++) {
+    // Wind-driven shear decays exponentially with depth (turbulence e-folds over H_DECAY)
+    const depthFactor = Math.exp(2.0 * z[k] / H_DECAY);  // z[k] < 0, so this decays
+    const shear2_k = Math.max((us / dz) * (us / dz) * depthFactor, 1e-12);
+
+    // ∂ρ/∂z in upward-z coords: (ρ[k] - ρ[k+1]) / dz, since z[k] > z[k+1]
+    const drhodz = (rho[k] - rho[k + 1]) / dz;
+    // N² = -(g/ρ₀)(∂ρ/∂z): positive for stable stratification
+    const N2 = -(G / RHO0) * drhodz;
+
+    const Ri = N2 > 0 ? N2 / shear2_k : 0;
+    const fRi = 1.0 / (1.0 + 5.0 * Math.max(0, Ri));
+
+    // Wind mixing only where turbulence is meaningful (depthFactor > ~1e-4 → top 20m)
+    const windK = depthFactor > 1e-4 ? K_WIND_MAX * windFactor * fRi : 0;
+    K[k] = K_BG + windK;
+  }
+  return K;
+}
+
+// ─── Timestepper ─────────────────────────────
+// Forward Euler diffusion with stability clamp
+
+function diffuse(field, K, dt) {
+  const f = field.slice();
+  const dtOverDz2 = dt / (dz * dz);
+  // Hard stability clamp: κ·dt/dz² ≤ 0.45
+  const kMax = 0.45 * dz * dz / dt;
+
+  for (let k = 1; k < NZ - 1; k++) {
+    const K_up   = 0.5 * (Math.min(K[k - 1], kMax) + Math.min(K[k], kMax));
+    const K_down = 0.5 * (Math.min(K[k], kMax)     + Math.min(K[k + 1], kMax));
+    f[k] = field[k] + dtOverDz2 * (K_up * (field[k-1] - field[k]) - K_down * (field[k] - field[k+1]));
+  }
+  // No-flux at bottom; one-sided at surface
+  const K_surf = 0.5 * (Math.min(K[0], kMax) + Math.min(K[1], kMax));
+  f[0] = field[0] + dtOverDz2 * K_surf * (field[1] - field[0]);
+  f[NZ-1] = field[NZ-1];
+  return f;
+}
+
+// ─── Initial conditions ───────────────────────
+function initProfiles(dT, hThermo, tSurf) {
+  const T_deep = tSurf - dT;
+  const S_surf = 35.0;
+
+  // Tanh thermocline: T_deep + (dT/2)·[1 − tanh((depth − h_thermo)/8 m)]
+  const T = z.map(zi => {
+    const depth = -zi;
+    return T_deep + (dT / 2) * (1 - Math.tanh((depth - hThermo) / 8));
+  });
+  const S = z.map(() => S_surf);
+  return { T, S };
+}
+
+// ─── Freshwater forcing ───────────────────────
+// Ramp: linear over first rampDays, hold for (duration-rampDays), then off
+// Applied as a salinity flux at k=0 (surface cell)
+// FW flux (mm/hr) → m/s → S flux: F_S = -S_surf * E (m/s)
+
+function fwFlux(tDay, fwMmHr, fwDays) {
+  if (tDay < 0 || tDay > fwDays) return 0;
+  const rampDays = Math.min(2, fwDays * 0.3);
+  let r = 1.0;
+  if (tDay < rampDays) r = tDay / rampDays;
+  const fwMs = (fwMmHr * 1e-3) / 3600;  // m/s
+  return fwMs * r;  // apply ramp
+}
+
+// Net surface heat flux (negative = cooling).
+// Extreme rainfall/flooding coincides with heavy cloud cover → evaporation + longwave
+// loss exceeds reduced solar → net cooling scenario. This is what makes the barrier
+// layer mechanism visible: the control run cools, the FW halocline protects warm water.
+const RHO_CP = RHO0 * 4000;  // J/(m³·°C)
+
+// ─── Run one simulation ───────────────────────
+function runColumn(params, applyFW) {
+  const { dT, hThermo, fwMmHr, fwDays, windSpeed, tSurf, qNet, nDays, dtHours, saveEvery } = params;
+  const dt  = dtHours * 3600;  // s
+
+  let { T, S } = initProfiles(dT, hThermo, tSurf);
+
+  const nSteps    = Math.round(nDays * 24 / dtHours);
+  const saveSteps = Math.round(saveEvery * 24 / dtHours);
+
+  const T_out   = [];
+  const S_out   = [];
+  const t_out   = [];
+  const eta_out = [];   // cumulative free-surface rise (m)
+
+  let eta = 0;
+
+  T_out.push(T.slice());  S_out.push(S.slice());
+  t_out.push(0);          eta_out.push(0);
+
+  for (let step = 1; step <= nSteps; step++) {
+    const tDay = (step * dtHours) / 24;
+
+    const K = mixingCoeffs(T, S, windSpeed);
+    T = diffuse(T, K, dt);
+    S = diffuse(S, K, dt);
+
+    // Surface heat flux
+    T[0] += (qNet / RHO_CP) * dt / dz;
+
+    // Volumetric freshwater flux — real FW (not virtual salt flux).
+    // Freshwater entering at rate E (m/s) raises the free surface by E·dt
+    // and pushes the existing water column downward by the same amount.
+    // Represented as first-order upwind advection of the column downward
+    // by α = E·dt/dz cells; bottom cell loses water to the sub-domain reservoir
+    // (z-coordinate column, no salt conservation below 200 m).
+    // Rain temperature is assumed equal to the surface ocean temperature,
+    // so only salinity is altered at the surface cell.
+    if (applyFW) {
+      const fw = fwFlux(tDay, fwMmHr, fwDays);
+      if (fw > 0) {
+        const alpha = fw * dt / dz;
+        eta += fw * dt;
+        for (let k = NZ - 1; k > 0; k--) {
+          T[k] = (1 - alpha) * T[k] + alpha * T[k - 1];
+          S[k] = (1 - alpha) * S[k] + alpha * S[k - 1];
+        }
+        // Surface cell receives pure freshwater (S_rain = 0, T_rain = T[0])
+        S[0] = Math.max((1 - alpha) * S[0], 0);
+      }
+    }
+
+    if (step % saveSteps === 0) {
+      T_out.push(T.slice());
+      S_out.push(S.slice());
+      t_out.push(tDay);
+      eta_out.push(eta);
+    }
+  }
+
+  return { T: T_out, S: S_out, t: t_out, eta: eta_out };
+}
+
+// ─────────────────────────────────────────────
+// APP STATE
+// ─────────────────────────────────────────────
+
+let simCtrl     = null;
+let simFW       = null;
+let showAnomaly = false;
+let varSelect   = 'T';   // 'T' | 'S' | 'rho'
+
+const PLOT_CONFIG = { responsive: true, displayModeBar: false };
+const DARK_LAYOUT = {
+  paper_bgcolor: '#13243a',
+  plot_bgcolor:  '#0d1b2a',
+  font: { color: '#e0e6f0', size: 11 },
+  margin: { t: 10, b: 45, l: 55, r: 10 },
+};
+
+// ─────────────────────────────────────────────
+// COLORSCALES  (hardcoded from cmocean RGB files)
+// ─────────────────────────────────────────────
+// Source: github.com/matplotlib/cmocean — sampled at equal fractions
+
+// thermal: dark navy → purple → pink-red → orange → yellow-green
+const CS_THERMAL = [
+  [0.00, 'rgb(4,35,51)'],
+  [0.10, 'rgb(15,50,106)'],
+  [0.20, 'rgb(57,51,159)'],
+  [0.30, 'rgb(115,74,173)'],
+  [0.40, 'rgb(168,90,163)'],
+  [0.50, 'rgb(208,104,136)'],
+  [0.60, 'rgb(240,131,79)'],
+  [0.70, 'rgb(252,168,28)'],
+  [0.80, 'rgb(250,208,87)'],
+  [0.90, 'rgb(237,241,145)'],
+  [1.00, 'rgb(206,250,142)'],
+];
+
+// haline: dark purple → blue → teal → green → yellow-cream
+const CS_HALINE = [
+  [0.00, 'rgb(42,24,108)'],
+  [0.10, 'rgb(41,39,162)'],
+  [0.20, 'rgb(14,72,153)'],
+  [0.30, 'rgb(22,97,142)'],
+  [0.40, 'rgb(40,120,137)'],
+  [0.50, 'rgb(73,161,130)'],
+  [0.60, 'rgb(130,205,122)'],
+  [0.70, 'rgb(193,222,109)'],
+  [0.80, 'rgb(232,236,144)'],
+  [0.90, 'rgb(247,241,148)'],
+  [1.00, 'rgb(254,239,154)'],
+];
+
+// dense: light blue-grey → steel blue → deep navy → near-black
+const CS_DENSE = [
+  [0.00, 'rgb(230,241,241)'],
+  [0.10, 'rgb(186,220,250)'],
+  [0.20, 'rgb(145,192,223)'],
+  [0.30, 'rgb(118,166,212)'],
+  [0.40, 'rgb(93,140,190)'],
+  [0.50, 'rgb(68,114,158)'],
+  [0.60, 'rgb(48,89,117)'],
+  [0.70, 'rgb(29,65,70)'],
+  [0.80, 'rgb(15,44,28)'],
+  [0.90, 'rgb(7,25,6)'],
+  [1.00, 'rgb(3,14,1)'],
+];
+
+// balance: dark blue → pale neutral grey (midpoint) → dark red  [512-entry file]
+const CS_BALANCE = [
+  [0.000, 'rgb(24,28,67)'],
+  [0.125, 'rgb(37,124,185)'],
+  [0.250, 'rgb(92,163,203)'],
+  [0.375, 'rgb(164,193,208)'],
+  [0.499, 'rgb(219,213,207)'],
+  [0.624, 'rgb(239,238,236)'],
+  [0.749, 'rgb(183,104,70)'],
+  [0.874, 'rgb(104,15,40)'],
+  [1.000, 'rgb(60,9,18)'],
+];
+
+function getColorscale(v, anomaly) {
+  if (anomaly)     return CS_BALANCE;
+  if (v === 'T')   return CS_THERMAL;
+  if (v === 'S')   return CS_HALINE;
+  if (v === 'rho') return CS_DENSE;
+}
+
+function getUnits(v, anomaly) {
+  const prefix = anomaly ? 'Δ' : '';
+  if (v === 'T')   return prefix + '°C';
+  if (v === 'S')   return prefix + 'psu';
+  if (v === 'rho') return prefix + 'kg m⁻³';
+}
+
+function getVarData(sim, v) {
+  if (v === 'T')   return sim.T;
+  if (v === 'S')   return sim.S;
+  if (v === 'rho') return sim.rho;
+}
+
+// ─────────────────────────────────────────────
+// DENSITY COMPUTATION
+// ─────────────────────────────────────────────
+
+function computeDensity(T_out, S_out) {
+  return T_out.map((T_t, ti) => T_t.map((T, k) => eos(T, S_out[ti][k])));
+}
+
+// ─────────────────────────────────────────────
+// RUN
+// ─────────────────────────────────────────────
+
+function runSim() {
+  const btn = document.getElementById('runBtn');
+  btn.disabled = true;
+  setStatus('Running control simulation...', 'running');
+
+  setTimeout(() => {
+    const params = {
+      dT:        parseFloat(document.getElementById('s-dT').value),
+      hThermo:   parseFloat(document.getElementById('s-hT').value),
+      fwMmHr:    parseFloat(document.getElementById('s-fw').value),
+      fwDays:    parseFloat(document.getElementById('s-fd').value),
+      windSpeed: parseFloat(document.getElementById('s-ws').value),
+      tSurf:     parseFloat(document.getElementById('s-ts').value),
+      qNet:      -parseFloat(document.getElementById('s-qn').value),
+      nDays:     30,
+      dtHours:   1 / 6,   // 10-minute timestep (stable for K_max=5e-3, dz=2.5m)
+      saveEvery: 0.5,      // save every 12 hours → 60 frames
+    };
+
+    try {
+      simCtrl = runColumn(params, false);
+      setStatus('Running freshwater simulation...', 'running');
+
+      setTimeout(() => {
+        try {
+          simFW = runColumn(params, true);
+          simCtrl.rho = computeDensity(simCtrl.T, simCtrl.S);
+          simFW.rho   = computeDensity(simFW.T,   simFW.S);
+          const etaFinal = simFW.eta[simFW.eta.length - 1];
+          setStatus(
+            `Done — ${simCtrl.t.length} snapshots over ${params.nDays} days. ` +
+            `Cumulative FW input: ${etaFinal.toFixed(2)} m (free-surface rise / thermocline depression).`,
+            'done'
+          );
+
+          // Set scrubber
+          const sc = document.getElementById('scrubber');
+          sc.max = simCtrl.t.length - 1;
+          sc.value = simCtrl.t.length - 1;
+
+          renderAll();
+          btn.disabled = false;
+        } catch(e) {
+          setStatus('Error in FW run: ' + e.message, 'error');
+          btn.disabled = false;
+        }
+      }, 20);
+
+    } catch(e) {
+      setStatus('Error in control run: ' + e.message, 'error');
+      btn.disabled = false;
+    }
+  }, 20);
+}
+
+function setStatus(msg, cls) {
+  const el = document.getElementById('status');
+  el.textContent = msg;
+  el.className = cls || '';
+}
+
+function onToggle() {
+  showAnomaly = document.getElementById('anomalyToggle').checked;
+  document.getElementById('lbl-abs').classList.toggle('active', !showAnomaly);
+  document.getElementById('lbl-anom').classList.toggle('active', showAnomaly);
+  if (simCtrl) renderAll();
+}
+
+function onVarSelect(v) {
+  varSelect = v;
+  ['T', 'S', 'rho'].forEach(id => {
+    document.getElementById('vbtn-' + id).classList.toggle('active', id === v);
+  });
+  if (simCtrl) renderAll();
+}
+
+// ─────────────────────────────────────────────
+// PLOTTING
+// ─────────────────────────────────────────────
+
+function transpose(arr) {
+  // arr[time][depth] → arr[depth][time]
+  const nT = arr.length;
+  const nZ = arr[0].length;
+  const out = Array.from({length: nZ}, () => new Array(nT));
+  for (let t = 0; t < nT; t++)
+    for (let k = 0; k < nZ; k++)
+      out[k][t] = arr[t][k];
+  return out;
+}
+
+function renderAll() {
+  renderHovmoller();
+  updateProfiles();
+}
+
+function renderHovmoller() {
+  const tArr  = simCtrl.t;
+  const zArr  = z.map(zi => -zi);
+  const cs    = getColorscale(varSelect, false);
+  const csA   = getColorscale(varSelect, true);
+  const units = getUnits(varSelect, false);
+  const unitsA= getUnits(varSelect, true);
+
+  const varNames = { T: 'Temperature', S: 'Salinity', rho: 'Density' };
+  const vLabel   = varNames[varSelect];
+
+  // Control Hovmöller (always absolute)
+  const ctrl_zt = transpose(getVarData(simCtrl, varSelect));
+  const fw_zt   = transpose(getVarData(simFW,   varSelect));
+
+  // Shared colour range across both runs so colours are directly comparable
+  const allVals  = ctrl_zt.flat().concat(fw_zt.flat());
+  const sharedMin = Math.min(...allVals);
+  const sharedMax = Math.max(...allVals);
+
+  document.getElementById('hov-ctrl').parentElement.querySelector('h3').textContent =
+    `Control run — ${vLabel} (${units})`;
+  Plotly.react('hov-ctrl', [{
+    type: 'heatmap',
+    x: tArr, y: zArr, z: ctrl_zt,
+    colorscale: cs, zmin: sharedMin, zmax: sharedMax,
+    zsmooth: 'best',
+    colorbar: { title: { text: units, side: 'right' }, len: 0.85, thickness: 12 },
+  }], {
+    ...DARK_LAYOUT,
+    xaxis: { title: 'Day', gridcolor: '#1e3a56' },
+    yaxis: { title: 'Depth (m)', autorange: 'reversed', gridcolor: '#1e3a56' },
+  }, PLOT_CONFIG);
+
+  // FW Hovmöller — absolute (shared range) or anomaly
+  let fwTrace;
+
+  if (showAnomaly) {
+    const anom = fw_zt.map((row, k) => row.map((v, t) => v - ctrl_zt[k][t]));
+    const maxA = Math.max(...anom.flat().map(Math.abs), 1e-9);
+    fwTrace = {
+      type: 'heatmap',
+      x: tArr, y: zArr, z: anom,
+      colorscale: csA, zmid: 0, zmin: -maxA, zmax: maxA,
+      zsmooth: 'best',
+      colorbar: { title: { text: unitsA, side: 'right' }, len: 0.85, thickness: 12 },
+    };
+    document.getElementById('hov-fw-title').textContent =
+      `Freshwater run — ${vLabel} anomaly (FW − Control)`;
+  } else {
+    fwTrace = {
+      type: 'heatmap',
+      x: tArr, y: zArr, z: fw_zt,
+      colorscale: cs, zmin: sharedMin, zmax: sharedMax,
+      zsmooth: 'best',
+      colorbar: { title: { text: units, side: 'right' }, len: 0.85, thickness: 12 },
+    };
+    document.getElementById('hov-fw-title').textContent =
+      `Freshwater run — ${vLabel} (${units})`;
+  }
+
+  Plotly.react('hov-fw', [fwTrace], {
+    ...DARK_LAYOUT,
+    xaxis: { title: 'Day', gridcolor: '#1e3a56' },
+    yaxis: { title: 'Depth (m)', autorange: 'reversed', gridcolor: '#1e3a56' },
+  }, PLOT_CONFIG);
+}
+
+function updateProfiles() {
+  if (!simCtrl) return;
+  const idx  = parseInt(document.getElementById('scrubber').value);
+  const tDay = simCtrl.t[idx];
+  document.getElementById('timeLabel').textContent = `Day ${tDay.toFixed(1)}`;
+
+  const zArr     = z.map(zi => -zi);
+  const lineCtrl = { color: '#7eb8e0', width: 2 };
+  const lineFW   = { color: '#f08030', width: 2, dash: 'dash' };
+  const lineAnom = { color: '#f08030', width: 2 };
+
+  const profLayout = (xtitle, xside) => ({
+    ...DARK_LAYOUT,
+    xaxis: {
+      title: xtitle, gridcolor: '#1e3a56',
+      zeroline: true, zerolinecolor: '#4a6a8a', zerolinewidth: 1,
+    },
+    yaxis: { title: 'Depth (m)', autorange: 'reversed', gridcolor: '#1e3a56' },
+    legend: { x: xside, y: 0.05, bgcolor: 'rgba(0,0,0,0)', font: { size: 10 } },
+    margin: { ...DARK_LAYOUT.margin, b: 45, l: 60 },
+  });
+
+  if (showAnomaly) {
+    document.getElementById('prof-T-title').textContent   = 'Temperature anomaly (FW − Ctrl)';
+    document.getElementById('prof-S-title').textContent   = 'Salinity anomaly (FW − Ctrl)';
+    document.getElementById('prof-rho-title').textContent = 'Density anomaly (FW − Ctrl)';
+
+    const anomT   = simFW.T[idx].map((v, k)   => v - simCtrl.T[idx][k]);
+    const anomS   = simFW.S[idx].map((v, k)   => v - simCtrl.S[idx][k]);
+    const anomRho = simFW.rho[idx].map((v, k) => v - simCtrl.rho[idx][k]);
+
+    Plotly.react('prof-T',   [{ x: anomT,   y: zArr, mode: 'lines', name: 'FW − Ctrl', line: lineAnom }],
+      profLayout('ΔTemperature (°C)', 0.05),   PLOT_CONFIG);
+    Plotly.react('prof-S',   [{ x: anomS,   y: zArr, mode: 'lines', name: 'FW − Ctrl', line: lineAnom }],
+      profLayout('ΔSalinity (psu)', 0.05),     PLOT_CONFIG);
+    Plotly.react('prof-rho', [{ x: anomRho, y: zArr, mode: 'lines', name: 'FW − Ctrl', line: lineAnom }],
+      profLayout('ΔDensity (kg m⁻³)', 0.05),  PLOT_CONFIG);
+  } else {
+    document.getElementById('prof-T-title').textContent   = 'Temperature profiles';
+    document.getElementById('prof-S-title').textContent   = 'Salinity profiles';
+    document.getElementById('prof-rho-title').textContent = 'Density profiles';
+
+    Plotly.react('prof-T', [
+      { x: simCtrl.T[idx], y: zArr, mode: 'lines', name: 'Control',    line: lineCtrl },
+      { x: simFW.T[idx],   y: zArr, mode: 'lines', name: 'Freshwater', line: lineFW   },
+    ], profLayout('Temperature (°C)', 0.55), PLOT_CONFIG);
+
+    Plotly.react('prof-S', [
+      { x: simCtrl.S[idx], y: zArr, mode: 'lines', name: 'Control',    line: lineCtrl },
+      { x: simFW.S[idx],   y: zArr, mode: 'lines', name: 'Freshwater', line: lineFW   },
+    ], profLayout('Salinity (psu)', 0.05), PLOT_CONFIG);
+
+    Plotly.react('prof-rho', [
+      { x: simCtrl.rho[idx], y: zArr, mode: 'lines', name: 'Control',    line: lineCtrl },
+      { x: simFW.rho[idx],   y: zArr, mode: 'lines', name: 'Freshwater', line: lineFW   },
+    ], profLayout('Density (kg m⁻³)', 0.55), PLOT_CONFIG);
+  }
+}
+</script>
+</body>
+</html>

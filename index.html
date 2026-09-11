@@ -518,6 +518,11 @@
             color: #854d0e;
         }
 
+        .badge-preprint {
+            background: #ede9fe;
+            color: #5b21b6;
+        }
+
         .badge-other {
             background: #f1f5f9;
             color: #64748b;
@@ -747,7 +752,7 @@
                 <p class="affiliations">Climate Change Research Centre &amp; Centre for Marine Science and Innovation, UNSW Sydney &nbsp;·&nbsp; ACEAS</p>
                 <div class="header-cta">
                     <a href="#publications" class="cta-btn">View publications</a>
-                    <a href="CV_BEES_lecturer.pdf" class="cta-btn cta-btn-outline" target="_blank">Download CV</a>
+                    <a href="CV_Aug_2026.pdf" class="cta-btn cta-btn-outline" target="_blank">Download CV</a>
                     <a href="#contact" class="cta-btn cta-btn-outline">Get in touch</a>
                 </div>
             </div>
@@ -861,11 +866,11 @@
                 <span class="label">Peer-reviewed articles</span>
             </div>
             <div class="pub-stat">
-                <span class="number">550</span>
+                <span class="number">606</span>
                 <span class="label">Citations</span>
             </div>
             <div class="pub-stat">
-                <span class="number">13</span>
+                <span class="number">14</span>
                 <span class="label">h-index</span>
             </div>
             <div class="pub-stat">
@@ -879,6 +884,10 @@
 
         <button class="pub-toggle-btn" id="pubToggleBtn" onclick="toggleFullList()">Show all 20 publications</button>
         <div id="pub-list" style="display:none; margin-top:1rem;"></div>
+
+        <h3 style="color:#0c4a6e; font-size:1.1rem; margin:2rem 0 0.25rem;">Preprints</h3>
+        <p style="color:#64748b; font-size:0.85rem; margin-bottom:1rem;">Not yet peer reviewed · last updated September 2026</p>
+        <div id="pub-preprints"></div>
 
         <a href="https://scholar.google.com/citations?user=ioDaRtYAAAAJ&hl=en" target="_blank" class="scholar-link">Full list on Google Scholar</a>
     </section>
@@ -911,9 +920,16 @@
         </div>
 
         <div class="student">
-            <div class="student-name">Siying Liu</div>
-            <div class="student-degree">Taught MSc · UNSW Sydney</div>
-            <div class="student-topic">Modelling sea urchin <em>Centrostephanus rodgersii</em> larval dispersal from mainland Australia to Tasmania under EAC intensification</div>
+            <div class="student-name">Leon Jin</div>
+            <div class="student-degree">Honours · UNSW Sydney</div>
+            <div class="student-topic">Mixed layer drivers of marine heatwaves across multiple events</div>
+            <span class="student-status status-current">Current</span>
+        </div>
+
+        <div class="student">
+            <div class="student-name">Ronak Rathore</div>
+            <div class="student-degree">Research Intern · UNSW Sydney</div>
+            <div class="student-topic">Drivers of the 2016 Java marine heatwave</div>
             <span class="student-status status-current">Current</span>
         </div>
 
@@ -930,6 +946,13 @@
             <div class="student-name">Clea Welch</div>
             <div class="student-degree">MSc · University of Cape Town</div>
             <div class="student-topic">Subsurface marine heatwaves in the Mozambique Channel</div>
+            <span class="student-status status-past">Graduated 2026</span>
+        </div>
+
+        <div class="student">
+            <div class="student-name">Siying Liu</div>
+            <div class="student-degree">Taught MSc · UNSW Sydney</div>
+            <div class="student-topic">Modelling sea urchin <em>Centrostephanus rodgersii</em> larval dispersal from mainland Australia to Tasmania under EAC intensification</div>
             <span class="student-status status-past">Graduated 2026</span>
         </div>
 
@@ -977,11 +1000,35 @@
             <div class="teaching-desc">Taught and coordinated oceanography for 2nd and 3rd year Fisheries students.</div>
         </div>
 
+        <p class="data-subhead" id="teaching-apps" style="margin-top:2rem;">Teaching Apps</p>
+        <div class="data-grid">
+            <div class="data-card">
+                <a href="apps/freshwater_sim.html" target="_blank">Freshwater Coastal Ocean Simulator</a>
+                <p>A 1D water column model of a 100 m NSW shelf, comparing temperature, salinity and density under freshwater input against a control run, with adjustable stratification, wind and surface heat flux.</p>
+                <span class="data-tag">Interactive app</span>
+            </div>
+        </div>
+
     </section>
 
     <section id="data" class="fade-in">
         <h2>Data &amp; Code</h2>
 
+        <p class="data-subhead">Software &amp; analysis tools</p>
+        <div class="data-grid">
+            <div class="data-card">
+                <a href="https://github.com/ocean-mhw/mhw3d-detection/tree/main/src/mhw3d" target="_blank">mhw3d-detection</a>
+                <p>A scalable xarray/dask framework for detecting marine heatwaves in 3D gridded ocean data, from laptop to HPC.</p>
+                <span class="data-tag">Python package</span>
+            </div>
+            <div class="data-card">
+                <a href="https://github.com/rmholmes/access-om2-sst-budget" target="_blank">access-om2-sst-budget</a>
+                <p>Methods and analysis routines for diagnosing online and offline mixed layer heat and salt budgets in ACCESS-OM2.</p>
+                <span class="data-tag">Mixed layer heat budgets</span>
+            </div>
+        </div>
+
+        <p class="data-subhead">Paper code &amp; data</p>
         <div class="data-card" style="max-width:600px;">
             <a href="https://github.com/nmalan/Salinity-extremes-Ncomms" target="_blank">Salinity-extremes-Ncomms</a>
             <p>Code and data for the Nature Communications 2024 paper on coastal freshwater extremes during unprecedented rainfall.</p>
@@ -994,7 +1041,7 @@
         <h2>CV</h2>
         <div class="cv-section">
             <p>Download my full curriculum vitae, including my complete publication list, teaching history, and academic service record.</p>
-            <a href="CV_BEES_lecturer.pdf" class="cv-btn" target="_blank">Download CV (PDF)</a>
+            <a href="CV_Aug_2026.pdf" class="cv-btn" target="_blank">Download CV (PDF)</a>
         </div>
     </section>
 
@@ -1201,6 +1248,23 @@ const publications = [
     }
 ];
 
+const preprints = [
+    {
+        year: 2026,
+        authors: "Holmes, R.M., and Malan, N.",
+        title: "Accurately diagnosing mixed layer tracer budgets and marine heatwave drivers in ocean models",
+        journal: "ESS Open Archive",
+        doi: "10.22541/essoar.15005159/v1"
+    },
+    {
+        year: 2026,
+        authors: "Filbee-Dexter, K., Gendall, L., Pessarrodona, A., Burrows, M.T., Sen Gupta, A., Hobday, A.J., Holbrook, N.J., Malan, N., Montie, S., Krumhansl, K.A., et al.",
+        title: "Marine heatwaves drive widespread loss and slow recovery of coastal carbon cycling",
+        journal: "Research Square",
+        doi: "10.21203/rs.3.rs-9834051/v1"
+    }
+];
+
 function highlightName(authStr) {
     return authStr
         .replace(/\bMalan, N\.\b/g, '<strong>Malan, N.</strong>')
@@ -1211,7 +1275,8 @@ function highlightName(authStr) {
 function makePubDiv(pub) {
     const div = document.createElement('div');
     div.className = 'publication';
-    let badge = pub.status === 'inpress' ? '<span class="pub-badge badge-inpress">In Press</span>' : '';
+    let badge = pub.status === 'inpress' ? '<span class="pub-badge badge-inpress">In Press</span>'
+              : pub.status === 'preprint' ? '<span class="pub-badge badge-preprint">Preprint</span>' : '';
     let journalLine = `${pub.year} · <em>${pub.journal}</em>`;
     if (pub.details) journalLine += `, ${pub.details}`;
     if (pub.doi) journalLine += ` &nbsp;<a href="https://doi.org/${pub.doi}" target="_blank" class="pub-link">DOI</a>`;
@@ -1258,6 +1323,10 @@ document.addEventListener('DOMContentLoaded', function () {
             selectedContainer.appendChild(makePubDiv(pub));
         });
     });
+
+    // Preprints
+    const preprintContainer = document.getElementById('pub-preprints');
+    preprints.forEach(pub => preprintContainer.appendChild(makePubDiv({...pub, status: 'preprint'})));
 
     // Full list (hidden by default)
     const peerReviewed = publications.filter(p => p.type !== 'other');
