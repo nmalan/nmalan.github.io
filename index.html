@@ -749,10 +749,10 @@
             <div class="header-text">
                 <h1>Neil Malan</h1>
                 <p class="title">Senior Research Associate · Oceanographer</p>
-                <p class="affiliations">Climate Change Research Centre &amp; Centre for Marine Science and Innovation, UNSW Sydney &nbsp;·&nbsp; ACEAS</p>
+                <p class="affiliations">Climate Change Research Centre &amp; Centre for Marine Science and Innovation, UNSW Sydney &nbsp;·&nbsp; ARC Centre of Excellence for Our Future Oceans</p>
                 <div class="header-cta">
                     <a href="#publications" class="cta-btn">View publications</a>
-                    <a href="CV_Aug_2026.pdf" class="cta-btn cta-btn-outline" target="_blank">Download CV</a>
+                    <a href="CV_Nov_2026.pdf" class="cta-btn cta-btn-outline" target="_blank">Download CV</a>
                     <a href="#contact" class="cta-btn cta-btn-outline">Get in touch</a>
                 </div>
             </div>
@@ -867,7 +867,7 @@
                 <span class="label">Peer-reviewed articles</span>
             </div>
             <div class="pub-stat">
-                <span class="number">606</span>
+                <span class="number">676</span>
                 <span class="label">Citations</span>
             </div>
             <div class="pub-stat">
@@ -883,7 +883,7 @@
         <h3 style="color:#0c4a6e; font-size:1.1rem; margin-bottom:1rem;">Selected Publications</h3>
         <div id="pub-selected"></div>
 
-        <button class="pub-toggle-btn" id="pubToggleBtn" onclick="toggleFullList()">Show all 20 publications</button>
+        <button class="pub-toggle-btn" id="pubToggleBtn" onclick="toggleFullList()">Show all publications</button>
         <div id="pub-list" style="display:none; margin-top:1rem;"></div>
 
         <h3 style="color:#0c4a6e; font-size:1.1rem; margin:2rem 0 0.25rem;">Preprints</h3>
@@ -1008,6 +1008,11 @@
                 <p>A 1D water column model of a 100 m NSW shelf, comparing temperature, salinity and density under freshwater input against a control run, with adjustable stratification, wind and surface heat flux.</p>
                 <span class="data-tag">Interactive app</span>
             </div>
+            <div class="data-card">
+                <a href="apps/rossby_lagrangian.html" target="_blank">Why Rossby Waves Go West</a>
+                <p>Ride along with a Rossby wave and see why parcels must pass through it from the west: only then does the curvature of their path supply the spin that potential vorticity conservation demands. Based on Schneider (2015, J. Atmos. Sci.).</p>
+                <span class="data-tag">Interactive app</span>
+            </div>
         </div>
 
     </section>
@@ -1042,7 +1047,7 @@
         <h2>CV</h2>
         <div class="cv-section">
             <p>Download my full curriculum vitae, including my complete publication list, teaching history, and academic service record.</p>
-            <a href="CV_Aug_2026.pdf" class="cv-btn" target="_blank">Download CV (PDF)</a>
+            <a href="CV_Nov_2026.pdf" class="cv-btn" target="_blank">Download CV (PDF)</a>
         </div>
     </section>
 
@@ -1078,6 +1083,15 @@
 
 <script>
 const publications = [
+    {
+        year: 2026,
+        authors: "Malan, N., Roughan, M., Hemming, M., Doszpot, N., Johnson, C.L., Lynch, S.K., Mason, R.A., and Ingleton, T.",
+        title: "Observations of freshwater outflows impacting the coastal ocean along SE Australia following extreme rainfall in 2022",
+        journal: "Marine and Freshwater Research",
+        details: "MF26027",
+        doi: "10.1071/MF26027",
+        theme: "Coastal freshwater extremes"
+    },
     {
         year: 2025,
         authors: "Malan, N., Sen Gupta, A., Schaeffer, A., Zhang, S., Doblin, M.A., Semolini Pilo, G., Kiss, A.E., Everett, J.D., Behrens, E., Capotondi, A., et al.",
@@ -1294,7 +1308,7 @@ function toggleFullList() {
     const btn = document.getElementById('pubToggleBtn');
     const visible = list.style.display !== 'none';
     list.style.display = visible ? 'none' : 'block';
-    btn.textContent = visible ? 'Show all 20 publications' : 'Hide full list';
+    btn.textContent = visible ? 'Show all ' + publications.length + ' publications' : 'Hide full list';
 }
 
 const fadeObserver = new IntersectionObserver((entries) => {
@@ -1328,6 +1342,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Preprints
     const preprintContainer = document.getElementById('pub-preprints');
     preprints.forEach(pub => preprintContainer.appendChild(makePubDiv({...pub, status: 'preprint'})));
+    document.getElementById('pubToggleBtn').textContent = 'Show all ' + publications.length + ' publications';
 
     // Full list (hidden by default)
     const peerReviewed = publications.filter(p => p.type !== 'other');

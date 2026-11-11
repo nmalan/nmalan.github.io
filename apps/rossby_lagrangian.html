@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Why Rossby Waves Go West</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #ffffff;
+    --ink: #1d1d1b;
+    --muted: #6b6b66;
+    --rule: #d6d5cf;
+    --north: #2f5d8a;
+    --south: #c08a3e;
+    --conflict: #c0392b;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 18px;
+    line-height: 1.6;
+    padding: 40px 16px 64px;
+    font-variant-numeric: lining-nums;
+  }
+  .col { max-width: 680px; margin: 0 auto; }
+  .wide { max-width: 940px; margin: 0 auto; }
+  a { color: var(--north); text-underline-offset: 2px; }
+  a:focus-visible, button:focus-visible, input:focus-visible { outline: 2px solid var(--north); outline-offset: 3px; }
+
+  .back { font-size: 0.85rem; color: var(--muted); margin-bottom: 28px; display: block; }
+  h1 { font-size: 2.3rem; line-height: 1.15; font-weight: 600; letter-spacing: -0.01em; margin-bottom: 14px; }
+  .lede { font-size: 1.12rem; color: #3c3c38; margin-bottom: 14px; }
+  .lede:last-of-type { margin-bottom: 36px; }
+
+  figure { margin: 0 0 40px; }
+  canvas { display: block; width: 100%; border-top: 1px solid var(--ink); border-bottom: 1px solid var(--rule); }
+  canvas.panelb { border-top: none; }
+  table.conv { width: 100%; max-width: 680px; border-collapse: collapse; font-size: 0.9rem; margin: 6px 0 36px; caption-side: top; }
+  table.conv caption { text-align: left; font-size: 0.92rem; color: #3c3c38; margin-bottom: 8px; }
+  table.conv th { font-weight: 600; text-align: left; padding: 6px 8px; border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink); }
+  table.conv td { padding: 5px 8px; vertical-align: top; }
+  table.conv tbody tr + tr td { border-top: 1px solid var(--rule); }
+  table.conv tbody tr:last-child td { border-bottom: 1px solid var(--ink); }
+  table.conv td:first-child { padding-left: 0; }
+  .globewrap { display: grid; grid-template-columns: minmax(0, 460px) minmax(0, 1fr); gap: 28px; align-items: center; }
+  @media (max-width: 760px) { .globewrap { grid-template-columns: 1fr; } }
+  #globe { width: 100%; height: auto; display: block; font-family: 'Source Serif 4', Georgia, serif; }
+  .globetext p { font-size: 0.95rem; margin-bottom: 12px; }
+  .globefig figcaption { margin-top: 6px; }
+  table.conv .hl { background: rgba(110, 100, 70, 0.11); }
+  figcaption { font-size: 0.92rem; line-height: 1.55; color: #3c3c38; margin-top: 12px; max-width: 680px; }
+  .fig { font-variant: small-caps; letter-spacing: 0.03em; font-weight: 600; color: var(--ink); }
+  .bad { color: var(--conflict); }
+  .key { display: inline-block; width: 0.7em; height: 0.7em; border-radius: 50%; border: 1px solid var(--ink); vertical-align: 0.02em; margin: 0 0.15em; }
+
+  .view { display: flex; flex-wrap: wrap; gap: 4px 18px; align-items: baseline; font-size: 0.95rem; margin: 0 0 10px; }
+  .view span { color: var(--muted); }
+  .tbtn {
+    background: none; border: none; font: inherit; color: var(--ink); cursor: pointer; padding: 2px 0;
+    border-bottom: 1px solid transparent;
+  }
+  .tbtn:hover { border-bottom-color: var(--rule); }
+  .tbtn[aria-pressed="true"] { border-bottom: 2px solid var(--ink); font-weight: 600; }
+  .linkbtn { background: none; border: none; font: inherit; color: var(--north); text-decoration: underline; text-underline-offset: 2px; cursor: pointer; padding: 0; }
+
+  .controls { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 40px; margin: 22px 0 8px; max-width: 680px; }
+  @media (max-width: 600px) { .controls { grid-template-columns: 1fr; } h1 { font-size: 1.85rem; } body { font-size: 17px; } }
+  .ctl label { display: flex; justify-content: space-between; font-size: 0.95rem; margin-bottom: 6px; }
+  .ctl output { font-variant-numeric: tabular-nums; }
+  input[type=range] { -webkit-appearance: none; appearance: none; width: 100%; height: 18px; background: transparent; cursor: pointer; }
+  input[type=range]::-webkit-slider-runnable-track { height: 1px; background: var(--ink); }
+  input[type=range]::-moz-range-track { height: 1px; background: var(--ink); }
+  input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 12px; height: 12px; margin-top: -6px; border-radius: 50%; background: var(--paper); border: 1.5px solid var(--ink); }
+  input[type=range]::-moz-range-thumb { width: 10px; height: 10px; border-radius: 50%; background: var(--paper); border: 1.5px solid var(--ink); }
+
+  .twofig { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 32px; align-items: start; }
+  @media (max-width: 760px) { .twofig { grid-template-columns: 1fr; } }
+  table.nums { width: 100%; border-collapse: collapse; font-size: 0.9rem; border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink); }
+  table.nums td { padding: 5px 0; }
+  table.nums tr + tr td { border-top: 1px solid var(--rule); }
+  table.nums td:last-child { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; padding-left: 12px; }
+
+  h2 { font-size: 1.35rem; font-weight: 600; margin: 8px 0 12px; }
+  .col p { margin-bottom: 14px; }
+  .eqn { display: flex; align-items: baseline; justify-content: center; position: relative; margin: 14px 0 18px; font-size: 1.12rem; font-style: italic; }
+  .eqn .no { position: absolute; right: 0; font-style: normal; color: var(--muted); font-size: 1rem; }
+  i { font-style: italic; }
+  .refs { font-size: 0.88rem; color: var(--muted); border-top: 1px solid var(--rule); padding-top: 14px; margin-top: 30px; }
+  .refs p { margin-bottom: 8px; }
+  @media (prefers-reduced-motion: reduce) { .motion-note { display: inline; } }
+</style>
+</head>
+<body>
+
+<div class="col">
+  <a class="back" href="../index.html">Neil Malan, teaching apps</a>
+  <h1>Why Rossby waves go west</h1>
+  <p class="lede">Rossby waves are how the ocean and atmosphere adjust on large scales. In the ocean they carry the response to changing winds westward across whole basins, which is part of why the strongest currents, like the East Australian Current, run along the western edges of ocean basins. It is also why sea-level anomalies seen by satellites drift steadily west. In the atmosphere they shape the meanders of the jet stream and the weather systems that travel along it.</p>
+  <p class="lede">Rossby waves always propagate west relative to the mean flow, but the usual explanation is hard to picture. Textbooks push a chain of fluid parcels north and south and work out the vorticity each parcel gains or loses. They then infer the velocities that shift the pattern west. That takes several steps, all in a frame where the wave keeps moving.</p>
+  <p class="lede">Schneider (2015) gives a simpler view: ride along with the wave. In that frame each parcel's path is fixed, and asking which way parcels can pass through it gives the westward propagation directly.</p>
+</div>
+
+<div class="wide">
+  <figure class="globefig">
+    <div class="globewrap">
+      <svg id="globe" viewBox="0 0 460 460" role="img" aria-label="Globe showing the sign of planetary vorticity and the meaning of cyclonic in each hemisphere">
+      <defs>
+        <marker id="ah" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1d1d1b"/></marker>
+        <linearGradient id="fgrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="rgb(110,100,70)" stop-opacity="0.32"/><stop offset="1" stop-color="rgb(110,100,70)" stop-opacity="0.02"/></linearGradient>
+        <clipPath id="disc"><circle cx="230" cy="240" r="175"/></clipPath>
+      </defs>
+      <circle cx="230" cy="240" r="175" fill="url(#fgrad)"/>
+      <g clip-path="url(#disc)"><line x1="142.5" y1="391.6" x2="317.5" y2="391.6" stroke="#a9a8a2" stroke-width="0.8"/><line x1="78.4" y1="327.5" x2="381.6" y2="327.5" stroke="#a9a8a2" stroke-width="0.8"/><line x1="78.4" y1="152.5" x2="381.6" y2="152.5" stroke="#a9a8a2" stroke-width="0.8"/><line x1="142.5" y1="88.4" x2="317.5" y2="88.4" stroke="#a9a8a2" stroke-width="0.8"/><ellipse cx="230" cy="240" rx="100.4" ry="175" fill="none" stroke="#a9a8a2" stroke-width="0.8"/><ellipse cx="230" cy="240" rx="164.4" ry="175" fill="none" stroke="#a9a8a2" stroke-width="0.8"/></g>
+      <line x1="230" y1="65" x2="230" y2="415" stroke="#a9a8a2" stroke-width="0.8"/>
+      <line x1="55" y1="240" x2="405" y2="240" stroke="#1d1d1b" stroke-width="1.2"/>
+      <circle cx="230" cy="240" r="175" fill="none" stroke="#1d1d1b" stroke-width="1.4"/>
+      <!-- rotation axis and sense -->
+      <line x1="230" y1="22" x2="230" y2="65" stroke="#1d1d1b" stroke-width="1.2"/>
+      <line x1="230" y1="415" x2="230" y2="452" stroke="#1d1d1b" stroke-width="1.2"/>
+      <path d="M276 42 A46 10 0 0 0 184 42" fill="none" stroke="#1d1d1b" stroke-width="1.2" stroke-dasharray="3 3"/>
+      <path d="M184 42 A46 10 0 0 0 276 42" fill="none" stroke="#1d1d1b" stroke-width="1.4" marker-end="url(#ah)"/>
+      <text x="286" y="37" font-size="14" font-style="italic" fill="#3c3c38">Earth turns eastward</text>
+      <text x="238" y="86" font-size="15" fill="#1d1d1b">N</text>
+      <text x="238" y="406" font-size="15" fill="#1d1d1b">S</text>
+      <!-- local spin of the surface -->
+      <path d="M148.8 151.6 A18 18 0 1 0 121.2 151.6" fill="none" stroke="#1d1d1b" stroke-width="1.6" marker-end="url(#ah)"/>
+      <text x="160" y="146" font-size="15" fill="#1d1d1b"><tspan font-style="italic">f</tspan> &gt; 0</text>
+      <path d="M121.2 341.6 A18 18 0 1 1 148.8 341.6" fill="none" stroke="#1d1d1b" stroke-width="1.6" marker-end="url(#ah)"/>
+      <text x="160" y="340" font-size="15" fill="#1d1d1b"><tspan font-style="italic">f</tspan> &lt; 0</text>
+      <text x="395" y="233" font-size="14" text-anchor="end" fill="#1d1d1b"><tspan font-style="italic">f</tspan> = 0</text>
+      <!-- f increases northward -->
+      <line x1="26" y1="400" x2="26" y2="86" stroke="#1d1d1b" stroke-width="1.2" marker-end="url(#ah)"/>
+      <text transform="translate(18 243) rotate(-90)" font-size="14" font-style="italic" text-anchor="middle" fill="#3c3c38">f increases northward</text>
+      <!-- the beta-plane window shown in Fig. 2 -->
+      <g id="here">
+        <rect x="252" y="-13" width="72" height="26" fill="rgba(255,255,255,0.55)" stroke="#2f5d8a" stroke-width="1.4" stroke-dasharray="4 3"/>
+        <text x="288" y="5" font-size="13" text-anchor="middle" fill="#2f5d8a">Fig. 2</text>
+        <text id="hereLat" x="330" y="5" font-size="13" fill="#2f5d8a"></text>
+      </g>
+    </svg>
+      <div class="globetext">
+        <p><b>Northern Hemisphere.</b> <i>f</i> &gt; 0. Seen from above, the surface turns anticlockwise beneath you, so cyclonic means anticlockwise (<i>&zeta;</i> &gt; 0). North is poleward.</p>
+        <p><b>Equator.</b> <i>f</i> = 0, and <i>f</i> changes fastest with latitude here, so <i>&beta;</i> is largest.</p>
+        <p><b>Southern Hemisphere.</b> <i>f</i> &lt; 0. The surface turns clockwise beneath you, so cyclonic means clockwise (<i>&zeta;</i> &lt; 0). North is equatorward.</p>
+        <p><b>Everywhere,</b> <i>f</i> increases northward. A parcel moved north must therefore lose relative vorticity and spin clockwise (&#8635;).</p>
+      </div>
+    </div>
+    <figcaption><span class="fig">Fig. 1.</span> Orientation. Planetary vorticity <i>f</i> = 2&Omega; sin <i>&phi;</i> is the spin of the Earth&rsquo;s surface about the local vertical. Shading darkens as <i>f</i> increases, as in Fig. 2. The dashed box marks the patch of ocean shown in Fig. 2, at the latitude chosen with the slider.</figcaption>
+  </figure>
+
+  <table class="conv" id="conv">
+    <caption><span class="fig">Table 1.</span> Sign conventions. The column for the chosen latitude is shaded.</caption>
+    <thead><tr><th></th><th>Northern Hemisphere</th><th>Southern Hemisphere</th></tr></thead>
+    <tbody>
+      <tr><td>Planetary vorticity <i>f</i></td><td>positive</td><td>negative</td></tr>
+      <tr><td>Absolute vorticity <i>&zeta;</i> + <i>f</i>, and PV</td><td>positive (|<i>&zeta;</i>| &#8810; |<i>f</i>|)</td><td>negative (|<i>&zeta;</i>| &#8810; |<i>f</i>|)</td></tr>
+      <tr><td>Moving north, <i>f</i></td><td>increases (more positive)</td><td>increases (less negative)</td></tr>
+      <tr><td>North is</td><td>poleward</td><td>equatorward</td></tr>
+      <tr><td><i>&zeta;</i> &gt; 0, anticlockwise &#8634;</td><td>cyclonic</td><td>anticyclonic</td></tr>
+      <tr><td><i>&zeta;</i> &lt; 0, clockwise &#8635;</td><td>anticyclonic</td><td>cyclonic</td></tr>
+      <tr><td>Displaced north: <i>&zeta;</i> must fall</td><td>&#8635; anticyclonic</td><td>&#8635; cyclonic</td></tr>
+      <tr><td>Displaced south: <i>&zeta;</i> must rise</td><td>&#8634; cyclonic</td><td>&#8634; anticyclonic</td></tr>
+    </tbody>
+  </table>
+
+  <div class="view">
+    <span>All three panels show the same wave at the same moment.</span>
+    <span style="margin-left:auto">Wave moving</span>
+    <button class="tbtn" id="btnWest" aria-pressed="true">west</button>
+    <button class="tbtn" id="btnEastT" aria-pressed="false">east</button>
+    <button class="tbtn" id="btnPause" aria-pressed="false" style="margin-left:14px">Pause</button>
+  </div>
+  <figure>
+    <canvas id="cvA" aria-label="Panel a: parcels seen from a frame moving with the wave"></canvas>
+    <canvas id="cvB" class="panelb" aria-label="Panel b: the same parcels seen from the ground"></canvas>
+    <canvas id="cvC" class="panelb" aria-label="Panel c: depth section showing the thermocline rising and falling as the wave passes"></canvas>
+    <figcaption id="cap1"></figcaption>
+  </figure>
+
+
+  <div class="controls">
+    <div class="ctl"><label for="latSlider"><span>Latitude</span> <output id="latVal"></output></label><input type="range" id="latSlider" min="-70" max="70" step="1" value="-30"></div>
+    <div class="ctl"><label for="lamSlider"><span>Wavelength, <i>&lambda;</i></span> <output id="lamVal"></output></label><input type="range" id="lamSlider" min="200" max="2000" step="50" value="1000"></div>
+    <div class="ctl"><label for="uSlider"><span>Mean flow, <i>&#363;</i></span> <output id="uVal"></output></label><input type="range" id="uSlider" min="-1" max="1" step="0.01" value="0"></div>
+    <div class="ctl"><label for="cSlider"><span>Trial phase speed, <i>c</i></span> <output id="cVal"></output></label><input type="range" id="cSlider" min="-4" max="4" step="0.01" value="0.3"></div>
+  </div>
+  <p style="font-size:0.95rem; max-width:680px; margin-bottom:40px;">
+    Try a wave that <button class="linkbtn" id="btnEast">moves east</button>, one that moves
+    <button class="linkbtn" id="btnSlow">west but too slowly</button>, or
+    <button class="linkbtn" id="btnSolve">let potential vorticity choose <i>c</i></button>.
+  </p>
+
+  <div class="twofig">
+    <figure>
+      <canvas id="cv2" aria-label="Relative vorticity along one wavelength"></canvas>
+      <figcaption id="cap2"></figcaption>
+    </figure>
+    <div>
+      <table class="nums">
+        <tr><td><i>&beta;</i> = 2&Omega; cos <i>&phi;</i> / <i>a</i></td><td id="rBeta"></td></tr>
+        <tr><td><i>K</i>&sup2; = (2&pi; / <i>&lambda;</i>)&sup2;</td><td id="rK2"></td></tr>
+        <tr><td>Flow through the wave, <i>&#363;</i> &minus; <i>c</i></td><td id="rRel"></td></tr>
+        <tr><td>Required, <i>&beta;</i> / <i>K</i>&sup2;</td><td id="rReq"></td></tr>
+        <tr><td>Rossby phase speed, <i>&#363;</i> &minus; <i>&beta;</i> / <i>K</i>&sup2;</td><td id="rCR"></td></tr>
+        <tr><td>Time to cross one wavelength</td><td id="rCross"></td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="col" style="margin-top:28px;">
+  <h2>The argument</h2>
+  <p>Move with the wave at its phase speed <i>c</i>. The pattern stops, the flow is steady, and streamlines become trajectories. Parcels pass through at <i>&#363;</i> &minus; <i>c</i>: from the west if this is positive, from the east if negative.</p>
+  <p>Absolute vorticity is conserved following a parcel. A parcel displaced north by <i>&delta;y</i> gains planetary vorticity, so its relative vorticity must fall by the same amount:</p>
+  <div class="eqn">&delta;&zeta; = &minus;&beta;&thinsp;&delta;y<span class="no">(1)</span></div>
+  <p>Northward means clockwise, <span id="hemiWord"></span>.</p>
+  <p>Now follow that spin through. A parcel moving east that spins clockwise turns right, which is back toward the south. The spin PV demands pulls displaced parcels back to their rest latitude, and this restoring tendency holds the wave together. A parcel moving west also turns right, but for it right is north, so the spin pushes it further from its rest latitude and no wave can form. These are the turns drawn in Fig. 2a.</p>
+  <p>When the wave has no north&ndash;south structure, a parcel's relative vorticity is set entirely by how sharply its path curves. Heading east over a crest, it turns right; heading west, it turns left. From the streamfunction,</p>
+  <div class="eqn">&delta;&zeta; = &minus;K&sup2;(&#363; &minus; c)&thinsp;&delta;y<span class="no">(2)</span></div>
+  <p>Equations (1) and (2) describe the same parcel, so they must agree. The signs match only when <i>&#363;</i> &minus; <i>c</i> &gt; 0. Parcels must therefore enter from the west, and the wave moves west relative to the flow. Matching the magnitudes as well gives the dispersion relation,</p>
+  <div class="eqn">c = &#363; &minus; &beta; / K&sup2;<span class="no">(3)</span></div>
+  <p>The displacement amplitude cancels, so the result holds for any small wave. Schneider (2015) extends the argument to waves with north&ndash;south structure and to baroclinic waves that propagate vertically. Viewed from the ground (Fig. 2b) the same wave is much harder to read. The pattern moves while parcels drift at <i>&#363;</i>, so streamlines and trajectories no longer coincide. With no mean flow a parcel only bobs north and south as the crests pass.</p>
+  <p>Fig. 2c shows what the wave does below the surface. In the ocean, long Rossby waves are mostly baroclinic. Their flow is carried by heave of the thermocline, which is deep under anticyclonic flow and shallow under cyclonic flow, while the sea surface bulges the opposite way by a few centimetres. A mooring sees the thermocline rise and fall as the wave passes. Panels (a) and (b) show a barotropic wave. For a baroclinic one, vortex stretching joins the PV balance and slows the wave, but the westward result is unchanged (Schneider 2015, section 3).</p>
+
+  <div class="refs">
+    <p>Schneider, E. K. (2015). Trajectory analysis of the mechanism for westward propagation of Rossby waves. <i>Journal of the Atmospheric Sciences</i>, 72, 2178&ndash;2182. <a href="https://doi.org/10.1175/JAS-D-14-0242.1" target="_blank" rel="noopener">doi:10.1175/JAS-D-14-0242.1</a></p>
+    <p>Barotropic, non-divergent wave on a <i>&beta;</i>-plane with zero meridional wavenumber. The vorticity values in Fig. 3 assume a 100 km displacement amplitude. App by <a href="../index.html">Neil Malan</a>, Climate Change Research Centre, UNSW Sydney.</p>
+  </div>
+</div>
+
+<script>
+(function () {
+  const OMEGA = 7.2921e-5, A_EARTH = 6.371e6, DY_PHYS = 1e5;
+  const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+  const INK = css('--ink'), MUTED = css('--muted'), RULE = css('--rule'), NORTH = css('--north'), SOUTH = css('--south'), BAD = css('--conflict');
+  const SERIF = '"Source Serif 4", Georgia, serif';
+  const $ = id => document.getElementById(id);
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const s = { lat: -30, lam: 1000, u: 0, c: 0.3, paused: reduceMotion, t: 0 };
+  if (reduceMotion) { $('btnPause').textContent = 'Play'; $('btnPause').setAttribute('aria-pressed', 'true'); }
+
+  const mkPanel = (id, frame, ratio, minH, rows) => { const c = $(id); return { c, ctx: c.getContext('2d'), frame, ratio, minH, rows, W: 900, H: 300, spin: [], trail: [] }; };
+  const PA = mkPanel('cvA', 'wave', 0.40, 240, [0.42, 0.64, 0.86]), PB = mkPanel('cvB', 'ground', 0.30, 215, [0.32, 0.58, 0.84]);
+  const PC = mkPanel('cvC', 'section', 0.30, 220, []);
+  const cv2 = $('cv2'), ctx2 = cv2.getContext('2d');
+  let W2 = 500, H2 = 260, trackedPhase = 0;
+  const TRACK_ROW = 1, TRACK_IDX = 4;
+
+  function fit(c, cx, w, h) {
+    const dpr = window.devicePixelRatio || 1;
+    c.style.height = h + 'px'; c.width = Math.round(w * dpr); c.height = Math.round(h * dpr);
+    cx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  function resize() {
+    [PA, PB, PC].forEach(P => {
+      P.W = P.c.clientWidth; P.H = Math.max(P.minH, Math.min(370, Math.round(P.W * P.ratio)));
+      fit(P.c, P.ctx, P.W, P.H); P.trail = [];
+    });
+    W2 = cv2.clientWidth; H2 = Math.max(200, Math.min(280, Math.round(W2 * 0.55)));
+    fit(cv2, ctx2, W2, H2);
+  }
+  const clearTrails = () => { PA.trail = []; PB.trail = []; };
+
+  function phys() {
+    const beta = 2 * OMEGA * Math.cos(s.lat * Math.PI / 180) / A_EARTH;
+    const k = 2 * Math.PI / (s.lam * 1e3), K2 = k * k, rel = s.u - s.c;
+    return { beta, K2, rel, req: beta / K2, cR: s.u - beta / K2, R: K2 * rel / beta };
+  }
+  function status(p) {
+    if (Math.abs(p.rel) < 0.005) return 'stall';
+    if (p.rel < 0) return 'bad';
+    return Math.abs(p.R - 1) <= 0.04 ? 'ok' : 'warn';
+  }
+  const fmt = (x, d = 2) => (x < 0 ? '−' : x > 0 ? '+' : '') + Math.abs(x).toFixed(d);
+  const NH = () => s.lat >= 0;
+  const dirWord = v => v < 0 ? 'west' : v > 0 ? 'east' : 'nowhere';
+
+  function updateText() {
+    const p = phys(), st = status(p);
+    const col = NH() ? 2 : 3;
+    $('here').setAttribute('transform', 'translate(0 ' + (240 - 175 * Math.sin(s.lat * Math.PI / 180)).toFixed(1) + ')');
+    $('hereLat').textContent = Math.abs(s.lat) + '\u00b0' + (s.lat > 0 ? 'N' : s.lat < 0 ? 'S' : '');
+    document.querySelectorAll('#conv tr').forEach(tr => [...tr.children].forEach((c, k) => c.classList.toggle('hl', k + 1 === col)));
+    $('latVal').textContent = Math.abs(s.lat) + '°' + (s.lat > 0 ? 'N' : s.lat < 0 ? 'S' : '');
+    $('lamVal').textContent = s.lam + ' km';
+    $('uVal').textContent = fmt(s.u) + ' m/s';
+    $('cVal').textContent = fmt(s.c) + ' m/s';
+    $('rBeta').textContent = (p.beta * 1e11).toFixed(2) + ' × 10⁻¹¹ m⁻¹ s⁻¹';
+    $('rK2').textContent = (p.K2 * 1e11).toFixed(2) + ' × 10⁻¹¹ m⁻²';
+    $('rRel').textContent = fmt(p.rel) + ' m/s';
+    $('rReq').textContent = fmt(p.req) + ' m/s';
+    $('rCR').textContent = fmt(p.cR) + ' m/s';
+    const days = Math.abs(p.rel) < 1e-3 ? Infinity : s.lam * 1e3 / Math.abs(p.rel) / 86400;
+    $('rCross').textContent = isFinite(days) ? days.toFixed(1) + ' days' : 'never';
+    $('hemiWord').textContent = 'which is ' + (NH() ? 'anticyclonic' : 'cyclonic') + ' in the ' + (NH() ? 'Northern' : 'Southern') +
+      ' Hemisphere (in the ' + (NH() ? 'Southern' : 'Northern') + ', clockwise is ' + (NH() ? 'cyclonic' : 'anticyclonic') + ')';
+
+    let verdict;
+    if (st === 'ok') verdict = 'Here every arrow turns the way PV needs, so this is a Rossby wave. It moves ' + p.req.toFixed(2) + ' m/s west relative to the flow and ' + Math.abs(p.cR).toFixed(2) + ' m/s ' + dirWord(p.cR) + ' over the ground.';
+    else if (st === 'stall') verdict = '<span class="bad">No wave is possible:</span> the pattern moves with the flow, so no parcel ever passes through it.';
+    else if (st === 'bad') verdict = '<span class="bad">No wave is possible:</span> parcels enter from the east, so the spin PV demands turns them against the curvature of the wave (dashed arrows) and they cannot follow the streamlines.';
+    else verdict = 'Parcels enter from the west, so every arrow turns the right way, but the paths curve too ' + (p.R < 1 ? 'gently' : 'sharply') + ' and supply only ' + Math.round(p.R * 100) + '% of the spin PV needs. Move <i>c</i> ' + (p.R < 1 ? 'further west' : 'back east') + ', towards ' + fmt(p.cR) + ' m/s.';
+
+    $('cap1').innerHTML = '<span class="fig">Fig. 2.</span> One wave, three views. Background shading is <i>f</i>, increasing northward. Parcels are coloured by displacement north <i class="key" style="background:' + NORTH + '"></i> or south <i class="key" style="background:' + SOUTH + '"></i>, and each cross spins as PV requires. ' +
+      '<b>(a)</b> Riding with the wave at <i>c</i> = ' + fmt(s.c) + ' m/s. Here streamlines are trajectories, and each arrow shows the turn that PV gives a passing parcel. ' + verdict + ' ' +
+      '<b>(b)</b> Standing on the ground. The crests move at <i>c</i> while parcels drift at <i>&#363;</i> = ' + fmt(s.u) + ' m/s, so the enlarged parcel\u2019s path (blue trail) no longer follows the wave. ' +
+      '<b>(c)</b> The same pattern as thermocline heave along the middle row, as a mooring would see it. At this latitude the crests sit over a ' + (NH() ? 'deep' : 'shallow') + ' thermocline.';
+    $('cap2').innerHTML = '<span class="fig">Fig. 3.</span> The vorticity budget of one parcel over one wavelength. Grey: its change in planetary vorticity, <i>&beta;&delta;y</i>. Solid: the relative vorticity PV conservation then requires, <i>&minus;&beta;&delta;y</i>, so that the two sum to zero (eq. 1). Dashed: the relative vorticity the path curvature supplies (eq. 2). The dot follows the enlarged parcel. A wave exists only if the solid and dashed curves coincide.';
+  }
+
+  function arcArrow(ctx, cx, cy, r, clockwise, top, ok, angles) {
+    const a0 = Math.PI * (top ? 1.2 : 0.2), a1 = Math.PI * (top ? 1.8 : 0.8);
+    const start = angles ? angles[0] : clockwise ? a0 : a1, end = angles ? angles[1] : clockwise ? a1 : a0;
+    ctx.strokeStyle = ok ? INK : BAD; ctx.fillStyle = ok ? INK : BAD; ctx.lineWidth = r > 20 ? 2.6 : 2;
+    ctx.setLineDash(ok ? [] : [7, 5]);
+    ctx.beginPath(); ctx.arc(cx, cy, r, start, end, !clockwise); ctx.stroke(); ctx.setLineDash([]);
+    const ex = cx + r * Math.cos(end), ey = cy + r * Math.sin(end), dir = clockwise ? 1 : -1;
+    const tx = -Math.sin(end) * dir, ty = Math.cos(end) * dir, nx = -ty, ny = tx;
+    const hl = r > 20 ? 13 : 10, hw = r > 20 ? 6.5 : 5;
+    ctx.beginPath(); ctx.moveTo(ex + tx * hl, ey + ty * hl); ctx.lineTo(ex + nx * hw, ey + ny * hw); ctx.lineTo(ex - nx * hw, ey - ny * hw); ctx.closePath(); ctx.fill();
+  }
+  function tint(hex, a) {
+    const v = parseInt(hex.slice(1), 16);
+    return 'rgba(' + ((v >> 16) & 255) + ',' + ((v >> 8) & 255) + ',' + (v & 255) + ',' + a + ')';
+  }
+
+  function drawPanel(P, dt, p, st) {
+    const { ctx, W, H } = P, wave = P.frame === 'wave';
+    const lamPx = W / 2, kPx = 2 * Math.PI / lamPx, vscale = lamPx / 5;
+    const A = H * 0.065, small = W < 600;
+    const per = Math.max(8, Math.min(18, Math.round(W / 46)));
+    const rBase = small ? 4.5 : 6, arcR = small ? 19 : 32, arcOff = small ? 4 : 7;
+    const arcs = [];
+    const patShift = wave ? 0 : s.c * vscale * s.t;
+    const speed = (wave ? p.rel : s.u) * vscale;
+    const fromWest = p.rel > 0, still = Math.abs(p.rel) < 0.005;
+
+    ctx.clearRect(0, 0, W, H);
+    // planetary vorticity f increases northward (both hemispheres): darker shading = larger f
+    const g = ctx.createLinearGradient(0, 0, 0, H);
+    g.addColorStop(0, 'rgba(110, 100, 70, 0.20)'); g.addColorStop(1, 'rgba(110, 100, 70, 0.0)');
+    ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+    ctx.textAlign = 'left'; ctx.fillStyle = INK; ctx.font = (small ? '13px ' : '15px ') + SERIF;
+    let title;
+    if (wave) title = '(a) Riding with the wave' + (small ? '' : still ? ': parcels stand still' : fromWest ? ': parcels enter from the west →' : ': parcels enter from the east ←');
+    else title = '(b) Standing on the ground' + (small ? '' : ': crests ▾ move ' + dirWord(s.c) + ', parcels drift ' + (s.u === 0 ? 'nowhere' : dirWord(s.u)));
+    ctx.fillText(title, 10, 20);
+    ctx.font = 'italic 12px ' + SERIF; ctx.fillStyle = MUTED; ctx.textAlign = 'right';
+    ctx.fillText(small ? 'f increases ↑' : 'shading: f increases northward ↑   east →', W - 10, 20);
+
+    P.rows.forEach(rf => {
+      const y0 = rf * H;
+      ctx.strokeStyle = RULE; ctx.lineWidth = 1; ctx.setLineDash([2, 4]);
+      ctx.beginPath(); ctx.moveTo(0, y0); ctx.lineTo(W, y0); ctx.stroke();
+      ctx.setLineDash(wave ? [] : [6, 5]);
+      ctx.strokeStyle = INK; ctx.lineWidth = wave ? 1.1 : 0.9;
+      ctx.beginPath();
+      for (let x = 0; x <= W; x += 3) { const y = y0 - A * Math.cos(kPx * (x - patShift)); x ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }
+      ctx.stroke(); ctx.setLineDash([]);
+      if (wave && !still) {           // flow-direction chevrons on each streamline
+        const dir = fromWest ? 1 : -1;
+        ctx.strokeStyle = fromWest ? INK : BAD; ctx.lineWidth = 1.4;
+        for (let m = 0; m < 4; m++) {
+          const x = lamPx * (0.25 + 0.5 * m), y = y0 - A * Math.cos(kPx * x);
+          const ang = Math.atan2(A * kPx * Math.sin(kPx * x) * dir, dir);
+          ctx.beginPath();
+          ctx.moveTo(x - 8 * Math.cos(ang - 0.5), y - 8 * Math.sin(ang - 0.5)); ctx.lineTo(x, y);
+          ctx.lineTo(x - 8 * Math.cos(ang + 0.5), y - 8 * Math.sin(ang + 0.5)); ctx.stroke();
+        }
+      }
+    });
+
+    const y0 = P.rows[0] * H;
+    if (wave) {
+      for (let n = 0; n <= 4; n++) {
+        const x = n * lamPx / 2;
+        const crest = n % 2 === 0;
+        const mid = W < 820;
+        const halfLabel = small ? 34 : mid ? 80 : 112;
+        if (x - halfLabel < 2 || x + halfLabel > W - 2) continue;
+        // PV demand (line 1) and what that spin does to a parcel moving through (line 2)
+        const yl = y0 - A - arcR - 12;
+        ctx.textAlign = 'center'; ctx.fillStyle = INK; ctx.font = (small ? '12px ' : '13px ') + SERIF;
+        ctx.fillText(small ? (crest ? 'f\u2191: needs \u21bb' : 'f\u2193: needs \u21ba')
+                           : (crest ? 'f higher here: must spin \u21bb' : 'f lower here: must spin \u21ba'), x, yl - 16);
+        if (!still) {
+          const back = crest ? 'south' : 'north';
+          const towardPole = (back === 'south') === (s.lat < 0);
+          const pole = s.lat === 0 ? '' : (towardPole ? ' (poleward)' : ' (equatorward)');
+          const spinSym = crest ? '\u21bb' : '\u21ba';
+          let l2;
+          if (small) l2 = fromWest ? 'turns back ' + back[0].toUpperCase() : 'turns away ' + (crest ? 'N' : 'S');
+          else if (fromWest) l2 = spinSym + ' steers it back ' + back + (mid ? '' : pole);
+          else l2 = spinSym + ' steers it further ' + (crest ? 'north' : 'south');
+          ctx.font = 'italic ' + (small ? '12px ' : '13px ') + SERIF; ctx.fillStyle = fromWest ? INK : BAD;
+          ctx.fillText(l2, x, yl);
+        }
+        // the turn PV imposes on a parcel passing through: always clockwise at crests, anticlockwise at troughs.
+        // Moving east, that turn follows the wave's curvature; moving west, it opposes it.
+        if (!still) {
+          const yc = y0 - (crest ? A : -A);
+          const cap = crest === fromWest;          // true: arc bulges up (cap shape), false: cup shape
+          let cy;
+          let ang = null;
+          if (fromWest) cy = crest ? yc + arcOff : yc - arcOff;          // hugs the crest/trough: turn follows the wave
+          else if (crest) { cy = yc - arcR + 2; ang = [0.42 * Math.PI, Math.PI]; }   // heading west, turns right: peels off north
+          else { cy = yc + arcR - 2; ang = [1.58 * Math.PI, Math.PI]; }              // heading west, turns left: peels off south
+          arcs.push([x, cy, crest, cap, ang]);
+        }
+      }
+    } else {
+      ctx.fillStyle = INK;
+      for (let n = -2; n <= 4; n++) {
+        const x = ((n * lamPx + patShift) % W + W) % W;
+        const yt = y0 - A - 14;
+        ctx.beginPath(); ctx.moveTo(x - 5, yt - 8); ctx.lineTo(x + 5, yt - 8); ctx.lineTo(x, yt); ctx.closePath(); ctx.fill();
+        if (Math.abs(s.c) > 0.005) {     // arrow showing which way the crest is moving
+          const d = Math.sign(s.c), xa = x + d * 9, ya = yt - 4;
+          ctx.strokeStyle = INK; ctx.lineWidth = 1.4;
+          ctx.beginPath(); ctx.moveTo(xa, ya); ctx.lineTo(xa + d * 18, ya); ctx.stroke();
+          ctx.beginPath(); ctx.moveTo(xa + d * 22, ya); ctx.lineTo(xa + d * 15, ya - 3.5); ctx.lineTo(xa + d * 15, ya + 3.5); ctx.closePath(); ctx.fill();
+        }
+      }
+    }
+
+    let tracked = null;
+    P.rows.forEach((rf, ri) => {
+      const yr = rf * H;
+      for (let i = 0; i < per; i++) {
+        const id = ri * 32 + i;
+        const x = (((i + 0.5) * W / per + ri * 7 + speed * s.t) % W + W) % W;
+        const ph = kPx * (x - patShift), cosv = Math.cos(ph), y = yr - A * cosv;
+        P.spin[id] = (P.spin[id] || 0) + cosv * 3.0 * dt;
+        const isT = ri === TRACK_ROW && i === TRACK_IDX, r = isT ? rBase + 3 : rBase;
+        ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI);
+        ctx.fillStyle = cosv >= 0 ? tint(NORTH, 0.15 + 0.75 * cosv) : tint(SOUTH, 0.15 + 0.75 * -cosv);
+        ctx.fill(); ctx.strokeStyle = INK; ctx.lineWidth = isT ? 1.6 : 1; ctx.stroke();
+        ctx.save(); ctx.translate(x, y); ctx.rotate(P.spin[id]);
+        ctx.beginPath(); ctx.moveTo(-r, 0); ctx.lineTo(r, 0); ctx.moveTo(0, -r); ctx.lineTo(0, r); ctx.stroke();
+        ctx.restore();
+        if (isT) tracked = { x, y, ph };
+      }
+    });
+
+    arcs.forEach(([x, cy, cw, cap, ang]) => arcArrow(ctx, x, cy, arcR, cw, cap, fromWest, ang));   // drawn on top of the parcels
+
+    if (tracked) {
+      const last = P.trail[P.trail.length - 1];
+      if (last && Math.abs(last.x - tracked.x) > W / 2) P.trail = [];
+      P.trail.push({ x: tracked.x, y: tracked.y });
+      if (P.trail.length > 360) P.trail.shift();
+      ctx.beginPath(); P.trail.forEach((q, j) => j ? ctx.lineTo(q.x, q.y) : ctx.moveTo(q.x, q.y));
+      ctx.strokeStyle = tint(NORTH, 0.5); ctx.lineWidth = 2.5; ctx.stroke();
+      if (wave) trackedPhase = tracked.ph;
+    }
+  }
+
+  function drawSection(P, p) {
+    const { ctx, W, H } = P, small = W < 600;
+    const lamPx = W / 2, kPx = 2 * Math.PI / lamPx, vscale = lamPx / 5, patShift = s.c * vscale * s.t;
+    const sgn = s.lat >= 0 ? 1 : -1;            // h' = f psi'/g': crests (psi' > 0) deep in NH, shallow in SH
+    const zTop = 54, zBot = H - 12, Dmax = 600;
+    const Z = d => zTop + (d / Dmax) * (zBot - zTop);
+    const heave = 55, ssh = 7;                    // schematic: 55 m thermocline heave, exaggerated sea surface
+    const tc = x => 200 + sgn * heave * Math.cos(kPx * (x - patShift));
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = 'rgba(70, 110, 150, 0.16)'; ctx.fillRect(0, zTop - ssh - 2, W, zBot - zTop + ssh + 2);  // cold deep water
+    ctx.beginPath();                               // warm upper layer between sea surface and thermocline
+    for (let x = 0; x <= W; x += 3) { const y = zTop - ssh * sgn * Math.cos(kPx * (x - patShift)) * 0.9; x ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }
+    for (let x = W; x >= 0; x -= 3) ctx.lineTo(x, Z(tc(x)));
+    ctx.closePath(); ctx.fillStyle = 'rgba(214, 160, 90, 0.30)'; ctx.fill();
+    ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, W, zTop - ssh - 2);
+    ctx.beginPath();
+    for (let x = 0; x <= W; x += 3) { const y = zTop - ssh * sgn * Math.cos(kPx * (x - patShift)) * 0.9; x ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }
+    ctx.strokeStyle = INK; ctx.lineWidth = 1; ctx.stroke();
+    ctx.beginPath();
+    for (let x = 0; x <= W; x += 3) { const y = Z(tc(x)); x ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }
+    ctx.strokeStyle = INK; ctx.lineWidth = 2; ctx.stroke();
+
+    // crest positions, aligned with the markers in (b)
+    for (let n = -2; n <= 4; n++) {
+      const x = ((n * lamPx + patShift) % W + W) % W;
+      ctx.strokeStyle = 'rgba(29,29,27,0.35)'; ctx.lineWidth = 1; ctx.setLineDash([3, 4]);
+      ctx.beginPath(); ctx.moveTo(x, zTop - ssh - 2); ctx.lineTo(x, zBot); ctx.stroke(); ctx.setLineDash([]);
+    }
+    // mooring fixed to the ground
+    const xm = Math.round(W * (small ? 0.7 : 0.86)), ym = Z(tc(xm));
+    ctx.strokeStyle = INK; ctx.lineWidth = 1.2;
+    ctx.beginPath(); ctx.moveTo(xm, zTop - 4); ctx.lineTo(xm, zBot); ctx.stroke();
+    ctx.fillStyle = INK; ctx.beginPath(); ctx.arc(xm, zTop - 6, 4, 0, 2 * Math.PI); ctx.fill();
+    ctx.beginPath(); ctx.arc(xm, ym, 4.5, 0, 2 * Math.PI); ctx.fillStyle = '#ffffff'; ctx.fill(); ctx.stroke();
+
+    ctx.textAlign = 'left'; ctx.fillStyle = INK; ctx.font = (small ? '13px ' : '15px ') + SERIF;
+    ctx.fillText(small ? '(c) Depth section' : '(c) Depth section along the middle row, from the ground', 10, 20);
+    ctx.font = 'italic 12px ' + SERIF; ctx.fillStyle = MUTED; ctx.textAlign = 'right';
+    ctx.fillText(small ? 'mooring' : 'mooring: thermocline rises and falls as crests pass', xm - 8, zBot - 6);
+    ctx.textAlign = 'left';
+    ctx.fillText('sea surface', 10, zTop + 16);
+    ctx.fillText('thermocline', 10, Z(tc(10)) - 8);
+    [200, 400].forEach(d => { ctx.textAlign = 'right'; ctx.fillText(d + ' m', W - 10, Z(d) + 4); });
+    if (!small) {
+      ctx.textAlign = 'left'; ctx.font = 'italic 13px ' + SERIF; ctx.fillStyle = INK;
+      ctx.fillText('warm upper layer', W * 0.36, Z(110));
+      ctx.fillText('cold deep water', W * 0.36, Z(420));
+    }
+  }
+
+  function drawPlot(p, st) {
+    const m = { l: 44, r: 12, t: 14, b: 34 }, pw = W2 - m.l - m.r, ph = H2 - m.t - m.b;
+    const amp = p.beta * DY_PHYS * 1e6, pathAmp = p.K2 * p.rel * DY_PHYS * 1e6;
+    const ymax = Math.max(amp, Math.abs(pathAmp), 0.1) * 1.15;
+    const X = f => m.l + f * pw, Y = z => m.t + ph / 2 - (z / ymax) * (ph / 2);
+    ctx2.clearRect(0, 0, W2, H2);
+    ctx2.strokeStyle = INK; ctx2.lineWidth = 1;
+    ctx2.beginPath(); ctx2.moveTo(m.l, m.t); ctx2.lineTo(m.l, m.t + ph); ctx2.lineTo(m.l + pw, m.t + ph); ctx2.stroke();
+    ctx2.strokeStyle = RULE; ctx2.beginPath(); ctx2.moveTo(m.l, Y(0)); ctx2.lineTo(m.l + pw, Y(0)); ctx2.stroke();
+    ctx2.font = '12px ' + SERIF; ctx2.fillStyle = MUTED; ctx2.textAlign = 'right';
+    const mag = Math.pow(10, Math.floor(Math.log10(ymax))), tick = ymax / mag > 2 ? mag : mag / 2;
+    [-tick, 0, tick].forEach(v => ctx2.fillText(v === 0 ? '0' : fmt(v, tick < 1 ? 1 : 0), m.l - 6, Y(v) + 4));
+    ctx2.textAlign = 'center';
+    [['crest', 0], ['trough', 0.5], ['crest', 1]].forEach(([t, f]) => ctx2.fillText(t, X(f), m.t + ph + 16));
+    ctx2.save(); ctx2.translate(12, m.t + ph / 2); ctx2.rotate(-Math.PI / 2);
+    ctx2.font = 'italic 12px ' + SERIF; ctx2.fillText('vorticity  (10⁻⁶ s⁻¹)', 0, 0); ctx2.restore();
+    const curve = (a, dash, col, w) => {
+      ctx2.setLineDash(dash); ctx2.strokeStyle = col; ctx2.lineWidth = w; ctx2.beginPath();
+      for (let i = 0; i <= 120; i++) { const f = i / 120, z = a * Math.cos(2 * Math.PI * f); i ? ctx2.lineTo(X(f), Y(z)) : ctx2.moveTo(X(f), Y(z)); }
+      ctx2.stroke(); ctx2.setLineDash([]);
+    };
+    curve(amp, [], '#a9a8a2', 1.5);                         // beta * dy
+    curve(-amp, [], INK, 1.6);                              // zeta required
+    curve(-pathAmp, [6, 4], st === 'bad' ? BAD : NORTH, 1.8); // zeta from path
+    const f = (((trackedPhase / (2 * Math.PI)) % 1) + 1) % 1;
+    ctx2.fillStyle = INK; ctx2.beginPath(); ctx2.arc(X(f), Y(-amp * Math.cos(2 * Math.PI * f)), 4, 0, 2 * Math.PI); ctx2.fill();
+  }
+
+  let last = performance.now();
+  function loop(now) {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    if (!s.paused) s.t += dt;
+    const p = phys(), st = status(p), d = s.paused ? 0 : dt;
+    drawPanel(PA, d, p, st); drawPanel(PB, d, p, st); drawSection(PC, p); drawPlot(p, st);
+    requestAnimationFrame(loop);
+  }
+
+  // mode: 'west' = Rossby solution, 'east' = mirror-image eastward wave (same speed through the pattern), null = free choice of c
+  let mode = 'west';
+  function setMode(m) {
+    mode = m;
+    $('btnWest').setAttribute('aria-pressed', m === 'west'); $('btnEastT').setAttribute('aria-pressed', m === 'east');
+    if (m === 'west') setC(phys().cR);
+    else if (m === 'east') setC(s.u + phys().req);
+  }
+  function bind(id, key) {
+    $(id).addEventListener('input', e => {
+      s[key] = parseFloat(e.target.value);
+      if (key === 'c') setMode(null);
+      else if (mode) { setMode(mode); return; }
+      clearTrails(); updateText();
+    });
+  }
+  bind('latSlider', 'lat'); bind('lamSlider', 'lam'); bind('uSlider', 'u'); bind('cSlider', 'c');
+  function setC(c) { s.c = Math.max(-4, Math.min(4, Math.round(c * 100) / 100)); $('cSlider').value = s.c; clearTrails(); updateText(); }
+  $('btnWest').onclick = () => setMode('west');
+  $('btnEastT').onclick = () => setMode('east');
+  $('btnPause').onclick = () => { s.paused = !s.paused; $('btnPause').textContent = s.paused ? 'Play' : 'Pause'; $('btnPause').setAttribute('aria-pressed', s.paused); };
+  $('btnEast').onclick = () => setMode('east');
+  $('btnSlow').onclick = () => { setMode(null); setC(s.u - 0.4 * phys().req); };
+  $('btnSolve').onclick = () => setMode('west');
+
+  window.addEventListener('resize', resize);
+  const start = () => { resize(); setMode('west'); requestAnimationFrame(loop); };
+  (document.fonts && document.fonts.ready) ? document.fonts.ready.then(start) : start();
+})();
+</script>
+</body>
+</html>
